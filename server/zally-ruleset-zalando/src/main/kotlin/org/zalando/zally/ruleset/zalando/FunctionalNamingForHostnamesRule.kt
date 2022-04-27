@@ -62,11 +62,12 @@ class FunctionalNamingForHostnamesRule(rulesConfig: Config) {
         val apiAudience = try {
             context.api.info?.apiAudience()
         } catch (e: UnsupportedAudienceException) {
-            return context.violations(e.message!!, context.api.info)
+            // cases covered by API Meta Information rule
+            return emptyList()
         }
         return when {
-            apiAudience !in audiencesToCheck -> emptyList()
-            apiAudience == null -> context.violations("API info section is not defined", context.api)
+            // cases covered by API Meta Information rule
+            apiAudience == null || apiAudience !in audiencesToCheck -> emptyList()
             context.swagger != null -> checkHostnamesInSwaggerHost(context, apiAudience)
             else -> checkHostnamesInOpenAPIServers(context, apiAudience)
         }
