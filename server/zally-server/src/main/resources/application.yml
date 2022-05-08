@@ -2,7 +2,7 @@ spring:
   profiles:
     active: production
   datasource:
-    url: jdbc:hsqldb:mem:storage;sql.syntax_pgs=true
+    url: jdbc:hsqldb:file:storage/data;sql.syntax_pgs=true
     username: sa
     password:
   jpa:
