@@ -79,28 +79,6 @@ class CaseCheckerRuleTest {
     }
 
     @Test
-    fun `checkPathParameterNames with snake_case returns no violations`() {
-        @Language("YAML")
-        val context = DefaultContextFactory().getSwaggerContext(
-            """
-            swagger: '2.0'
-            paths:
-              /things:
-                post:
-                  parameters:
-                  - in: path
-                    name: snake_case
-            """.trimIndent()
-        )
-
-        val violations = cut.checkPathParameterNames(context)
-
-        ZallyAssertions
-            .assertThat(violations)
-            .isEmpty()
-    }
-
-    @Test
     fun `checkQueryParameterNames returns violations`() {
         @Language("YAML")
         val context = DefaultContextFactory().getSwaggerContext(

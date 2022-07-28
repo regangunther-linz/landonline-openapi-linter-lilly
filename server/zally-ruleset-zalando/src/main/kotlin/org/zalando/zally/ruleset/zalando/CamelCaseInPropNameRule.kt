@@ -14,8 +14,8 @@ import org.zalando.zally.rule.api.Violation
     severity = Severity.MUST,
     title = "Property Names Must be ASCII snake_case"
 )
-class SnakeCaseInPropNameRule(config: Config) {
-    private val description = "Property name has to be snake_case"
+class CamelCaseInPropNameRule(config: Config) {
+    private val description = "Property name has to be camelCase"
 
     private val checker = CaseChecker.load(config)
 
