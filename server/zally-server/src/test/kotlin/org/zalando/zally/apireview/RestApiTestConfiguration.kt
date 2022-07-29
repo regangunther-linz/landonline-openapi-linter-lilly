@@ -33,7 +33,7 @@ class RestApiTestConfiguration {
                 .isNotEmpty
                 .contains(
                     "https://zally.example.com/TestRuleSet",
-                    "https://zalando.github.io/restful-api-guidelines/",
+                    "https://linz.github.io/step-api-restful-guidelines/",
                     "https://github.com/zalando/zally/blob/master/server/rules.md"
                 )
         }
