@@ -3,17 +3,16 @@
 package main
 
 import (
+	"github.com/stretchr/testify/assert"
+	"io"
 	"io/ioutil"
+	"net/http"
+	"net/http/httptest"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"testing"
-
-	"github.com/stretchr/testify/assert"
-	"io"
-	"net/http"
-	"net/http/httptest"
-	"path/filepath"
 )
 
 type callable func() error

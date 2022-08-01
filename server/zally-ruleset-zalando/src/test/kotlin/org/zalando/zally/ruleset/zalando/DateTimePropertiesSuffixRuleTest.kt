@@ -25,16 +25,16 @@ class DateTimePropertiesSuffixRuleTest {
               schemas:
                 Pet:
                   properties:
-                    created_at:
+                    createdAt:
                       type: string
                       format: date-time
-                    modified_at:
+                    modifiedAt:
                       type: string
                       format: date-time                      
-                    occurred_at:
+                    occurredAt:
                       type: string
                       format: date-time                      
-                    returned_at:
+                    returnedAt:
                       type: string
                       format: date-time
         """.trimIndent()
@@ -54,16 +54,16 @@ class DateTimePropertiesSuffixRuleTest {
               schemas:
                 Car:
                   properties:
-                    created_at:
+                    createdAt:
                       type: string
                       format: date
-                    modified_at:
+                    modifiedAt:
                       type: string
                       format: date                      
-                    occurred_at:
+                    occurredAt:
                       type: string
                       format: date                      
-                    returned_at:
+                    returnedAt:
                       type: string
                       format: date                  
         """.trimIndent()

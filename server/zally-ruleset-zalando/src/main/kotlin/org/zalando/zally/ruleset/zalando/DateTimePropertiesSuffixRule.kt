@@ -13,7 +13,7 @@ import io.swagger.v3.oas.models.media.Schema
     ruleSet = ZalandoRuleSet::class,
     id = "235",
     severity = Severity.SHOULD,
-    title = "Name date/time properties using the \"_at\" suffix"
+    title = "Name date/time properties using the \"At\" suffix"
 )
 class DateTimePropertiesSuffixRule(rulesConfig: Config) {
 
