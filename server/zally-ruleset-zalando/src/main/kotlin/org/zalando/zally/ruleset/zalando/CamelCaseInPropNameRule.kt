@@ -12,10 +12,10 @@ import org.zalando.zally.rule.api.Violation
     ruleSet = ZalandoRuleSet::class,
     id = "118",
     severity = Severity.MUST,
-    title = "Property Names Must be ASCII snake_case"
+    title = "Property Names Must be ASCII camelCased"
 )
-class SnakeCaseInPropNameRule(config: Config) {
-    private val description = "Property name has to be snake_case"
+class CamelCaseInPropNameRule(config: Config) {
+    private val description = "Property name has to be camelCase"
 
     private val checker = CaseChecker.load(config)
 

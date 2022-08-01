@@ -3,17 +3,16 @@
 package main
 
 import (
+	"github.com/stretchr/testify/assert"
+	"io"
 	"io/ioutil"
+	"net/http"
+	"net/http/httptest"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"testing"
-
-	"github.com/stretchr/testify/assert"
-	"io"
-	"net/http"
-	"net/http/httptest"
-	"path/filepath"
 )
 
 type callable func() error
@@ -92,7 +91,7 @@ func TestIntegrationDisplayRulesList(t *testing.T) {
 	out, e := RunAppAndCaptureOutput([]string{"", "rules"})
 
 	assert.Contains(t, out, "Avoid Link in Header Rule")
-	assert.Contains(t, out, "https://zalando.github.io/restful-api-guidelines/#166")
+	assert.Contains(t, out, "https://linz.github.io/step-api-restful-guidelines/#166")
 
 	assert.Nil(t, e)
 }

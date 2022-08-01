@@ -27,15 +27,15 @@ export function ViolationsTab({
           target="_blank"
           className="dc-link"
         >
-          SWAGGER Schema
+          OpenAPI 3 Schema
         </a>{' '}
         conforms to&nbsp;
         <a
-          href="http://zalando.github.io/restful-api-guidelines/"
+          href="https://linz.github.io/step-api-restful-guidelines/"
           target="_blank"
           className="dc-link"
         >
-          Zalando's REST API Guidelines
+          LINZ REST API Guidelines
         </a>
       </h4>
 

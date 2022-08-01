@@ -15,11 +15,11 @@ import org.zalando.zally.rule.api.Violation
     ruleSet = ZalandoRuleSet::class,
     id = "130",
     severity = Severity.MUST,
-    title = "Use snake_case (never camelCase) for Query Parameters"
+    title = "Use camelCase (never snake_case) for Query Parameters"
 )
 class SnakeCaseForQueryParamsRule(config: Config) {
 
-    val description = "Query parameter has to be snake_case"
+    val description = "Query parameter has to be camelCase"
 
     private val checker = CaseChecker.load(config)
 

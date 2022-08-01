@@ -10,14 +10,14 @@ class SnakeCaseForQueryParamsRuleTest {
     private val rule = SnakeCaseForQueryParamsRule(rulesConfig)
 
     @Test
-    fun `checkQueryParameter should return violation if query parameter is not snake_case`() {
+    fun `checkQueryParameter should return violation if query parameter is not camelCase`() {
         val spec = """
             openapi: 3.0.1
             paths:
               /article:
                 get:
                   parameters:
-                    - name: filterExpensiveArticles
+                    - name: filter_expensive_articles
                       in: query
         """.trimIndent()
         val context = DefaultContextFactory().getOpenApiContext(spec)
@@ -25,7 +25,7 @@ class SnakeCaseForQueryParamsRuleTest {
         val violations = rule.checkQueryParameter(context)
 
         assertThat(violations).isNotEmpty
-        assertThat(violations[0].description).isEqualTo("Query parameter has to be snake_case")
+        assertThat(violations[0].description).isEqualTo("Query parameter has to be camelCase")
         assertThat(violations[0].pointer.toString()).isEqualTo("/paths/~1article/get/parameters/0")
     }
 
@@ -37,7 +37,7 @@ class SnakeCaseForQueryParamsRuleTest {
               /article:
                 get:
                   parameters:
-                    - name: filter_expensive_articles
+                    - name: filterExpensiveArticles
                       in: query
         """.trimIndent()
         val context = DefaultContextFactory().getOpenApiContext(spec)

@@ -76,7 +76,7 @@ parameters:
     description: Name of the application
     required: true
   LifecycleState:
-    name: lifecycle_state
+    name: lifecycleState
     in: query
     type: string
     description: Filter APIs by lifecycle state
@@ -327,7 +327,7 @@ definitions:
         type: string
         description: Type of API definition
         example: SWAGGER-2.0
-      api_name:
+      apiName:
         type: string
         description: Name of the API
         example: Kio API
@@ -335,11 +335,11 @@ definitions:
         type: string
         description: Version of the API
         example: "1.0"
-      app_name:
+      appName:
         type: string
         description: Name of the application this API is deployed on
         example: kio
-      service_url:
+      serviceUrl:
         type: string
         description: URL pointing to the Application which is providing the API
         example: https://kio.example.com
@@ -359,7 +359,7 @@ definitions:
            "foo": "bar"}
     required:
     - status
-    - app_name
+    - appName
 
   Definition:
     type: object
@@ -401,7 +401,7 @@ definitions:
         type: string
         description: ID of the API, extracted from API Name field
         example: kio-api
-      lifecycle_state:
+      lifecycleState:
         $ref: '#/definitions/LifecycleState'
 
   Application:
@@ -412,7 +412,7 @@ definitions:
         type: string
         description: Application name (e.g. application and/or environment name)
         example: sales-orders-app
-      app_url:
+      appUrl:
         type: string
         description: URL of the Application
         example: sales-orders.api.zalando.com
@@ -425,7 +425,7 @@ definitions:
     type: object
     description: A Deployment of an Application
     properties:
-      api_version:
+      apiVersion:
         type: string
         description: Version of the API
         example: 1.0.0
@@ -452,11 +452,11 @@ definitions:
     type: object
     description: A version of one particular API
     properties:
-      api_version:
+      apiVersion:
         type: string
         description: Version from the definition
         example: 1.0.0
-      lifecycle_state:
+      lifecycleState:
         $ref: '#/definitions/LifecycleState'
       definitions:
         type: array
@@ -473,23 +473,23 @@ definitions:
   DefinitionLink:
     type: object
     properties:
-      api_ui:
+      apiUi:
         type: string
         description: Path to the UI for browsing the API
         example: /swagger-ui
-      api_url:
+      apiUrl:
         type: string
         description: Path to the API definition
         example: /swagger/api.json
-      created_at:
+      createdAt:
         type: string
         format: date-time
         description: first time crawled
-      last_updated_at:
+      lastUpdatedAt:
         type: string
         format: date-time
         description: last time crawled
-      lifecycle_state:
+      lifecycleState:
         $ref: '#/definitions/LifecycleState'
       href:
         type: string
@@ -501,23 +501,23 @@ definitions:
   ApplicationLink:
     type: object
     properties:
-      api_ui:
+      apiUi:
         type: string
         description: Path to the UI for browsing the API
         example: /swagger-ui
-      api_url:
+      apiUrl:
         type: string
         description: Path to the API definition
         example: /swagger/api.json
-      created_at:
+      createdAt:
         type: string
         format: date-time
         description: first time crawled
-      last_updated_at:
+      lastUpdatedAt:
         type: string
         format: date-time
         description: last time crawled
-      lifecycle_state:
+      lifecycleState:
         $ref: '#/definitions/LifecycleState'
       href:
         type: string

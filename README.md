@@ -16,7 +16,7 @@ Lilly is a quality assurance tool. It's a linter for OpenAPI specifications, whi
 - Provides best practices and advices
 
 Its standard configuration will check your APIs against the rules defined in
-[Zalando's RESTful Guidelines](http://zalando.github.io/restful-api-guidelines/),
+[LINZ RESTful Guidelines](https://linz.github.io/step-api-restful-guidelines/),
 but anyone can use it **out-of-the-box**.
 
 Lilly's easy-to-use [CLI](cli/README.md) uses the server in the background so that
@@ -71,10 +71,12 @@ of the [maintainers](MAINTAINERS) directly.
 
 ## Alternatives 
 
-ZalLillyly is not the only linter for OpenAPI v2 and v3. There is [an article](https://nordicapis.com/8-openapi-linters/) comparing different OpenAPI linters.
+Lilly (and by extension) is not the only linter for OpenAPI v2 and v3. There is [an article](https://nordicapis.
+com/8-openapi-linters/) 
+comparing different OpenAPI linters.
 
 So why should you choose Lilly?
-- It supports [Zalando's RESTful Guidelines](http://zalando.github.io/restful-api-guidelines/)
+- It supports [LINZ RESTful Guidelines](https://linz.github.io/step-api-restful-guidelines/)
 - It can be used in multiple ways: RESTful API, CLI and Web interface
 - Highly customizable (with Kotlin)  
 

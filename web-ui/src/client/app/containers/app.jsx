@@ -32,9 +32,12 @@ export function App(props) {
             />
             API Linter
           </Link>{' '}
-          - an UI instance of the{' '}
-          <Link to="https://github.com/zalando/zally" target="_blank">
-            'Zally' open source project
+          - an UI instance of{' '}
+          <Link
+            to="https://github.com/linz/step-api-linter-lilly"
+            target="_blank"
+          >
+            'Lilly'
           </Link>
         </h1>
         {OAUTH_ENABLED === true ? (
