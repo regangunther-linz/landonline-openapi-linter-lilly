@@ -21,7 +21,6 @@ class FunctionalNamingForHostnamesRule(rulesConfig: Config) {
     private val description = "hostname has to follow the functional naming schema"
 
     private val mustFollow = listOf(ApiAudience.EXTERNAL_PUBLIC, ApiAudience.EXTERNAL_PARTNER)
-    private val shouldFollow = listOf(ApiAudience.COMPANY_INTERNAL, ApiAudience.BUSINESS_UNIT_INTERNAL)
     private val mayFollow = listOf(ApiAudience.COMPONENT_INTERNAL)
 
     private val functionalDomain = """[a-z][a-z0-9]*"""
@@ -40,9 +39,6 @@ class FunctionalNamingForHostnamesRule(rulesConfig: Config) {
 
     @Check(severity = Severity.MUST)
     fun mustFollowFunctionalNaming(context: Context): List<Violation> = checkHostnames(context, mustFollow)
-
-    @Check(severity = Severity.SHOULD)
-    fun shouldFollowFunctionalNaming(context: Context): List<Violation> = checkHostnames(context, shouldFollow)
 
     @Check(severity = Severity.MAY)
     fun mayFollowFunctionalNaming(context: Context): List<Violation> = checkHostnames(context, mayFollow)
