@@ -12,16 +12,15 @@ import org.zalando.zally.core.ObjectTreeReader
 import org.zalando.zally.core.plus
 import org.zalando.zally.rule.api.Check
 import org.zalando.zally.rule.api.Context
-import org.zalando.zally.rule.api.Rule
 import org.zalando.zally.rule.api.Severity
 import org.zalando.zally.rule.api.Violation
 
-@Rule(
-    ruleSet = ZalandoRuleSet::class,
-    id = "176",
-    severity = Severity.MUST,
-    title = "Use Problem JSON"
-)
+// @Rule(
+//    ruleSet = ZalandoRuleSet::class,
+//    id = "176",
+//    severity = Severity.MUST,
+//    title = "Use Problem JSON"
+// )
 class UseProblemJsonRule {
     private val problemDetailsObjectMediaType = "application/problem+json"
     private val description = "Operations should return problem JSON when any problem occurs during processing " +
