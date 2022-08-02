@@ -4,7 +4,6 @@ enum class ApiAudience(val code: String) {
     EXTERNAL_PUBLIC("external-public"),
     EXTERNAL_PARTNER("external-partner"),
     COMPANY_INTERNAL("company-internal"),
-    BUSINESS_UNIT_INTERNAL("business-unit-internal"),
     COMPONENT_INTERNAL("component-internal");
 
     companion object {

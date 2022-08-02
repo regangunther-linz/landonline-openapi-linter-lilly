@@ -33,7 +33,6 @@ class FunctionalNamingForHostnamesRuleTest {
         assertThat(rule.isUrlValid("https://infrastructure-api-linter.othercompanysapis.com", ApiAudience.EXTERNAL_PUBLIC)).isFalse()
         assertThat(rule.isUrlValid("https://some-api.zalan.do", ApiAudience.EXTERNAL_PUBLIC)).isFalse()
         assertThat(rule.isUrlValid("https://some-api.zalan.do", ApiAudience.EXTERNAL_PARTNER)).isFalse()
-        assertThat(rule.isUrlValid("https://some-api.zalan.do", ApiAudience.BUSINESS_UNIT_INTERNAL)).isFalse()
     }
 
     @Test
@@ -57,17 +56,6 @@ class FunctionalNamingForHostnamesRuleTest {
     }
 
     @Test
-    fun `shouldFollowFunctionalNaming should return violation for company-internal APIs with invalid hostname`() {
-        val context = getOpenApiContextWithAudienceAndHostname("company-internal", "incorrect url")
-
-        val violations = rule.shouldFollowFunctionalNaming(context)
-
-        assertThat(violations).isNotEmpty
-        assertThat(violations[0].description).containsPattern(".*follow the functional naming schema.*")
-        assertThat(violations[0].pointer.toString()).isEqualTo("/servers/0/url")
-    }
-
-    @Test
     fun `mayFollowFunctionalNaming should return violation for component-internal APIs with invalid hostname`() {
         val context = getOpenApiContextWithAudienceAndHostname("component-internal", "incorrect url")
 
@@ -88,7 +76,6 @@ class FunctionalNamingForHostnamesRuleTest {
         )
 
         assertThat(rule.mustFollowFunctionalNaming(context)).isEmpty()
-        assertThat(rule.shouldFollowFunctionalNaming(context)).isEmpty()
         assertThat(rule.mayFollowFunctionalNaming(context)).isEmpty()
     }
 
@@ -97,7 +84,6 @@ class FunctionalNamingForHostnamesRuleTest {
         val context = getOpenApiContextWithAudienceAndHostname("external-partner", "api-sandbox.merchants.zalando.com")
 
         assertThat(rule.mustFollowFunctionalNaming(context)).isEmpty()
-        assertThat(rule.shouldFollowFunctionalNaming(context)).isEmpty()
         assertThat(rule.mayFollowFunctionalNaming(context)).isEmpty()
     }
 
@@ -130,7 +116,6 @@ class FunctionalNamingForHostnamesRuleTest {
         val context = getSwaggerContextWith(audience = "external-public", url = "infrastructure-api-linter.zalandoapis.com")
 
         assertThat(rule.mustFollowFunctionalNaming(context)).isEmpty()
-        assertThat(rule.shouldFollowFunctionalNaming(context)).isEmpty()
         assertThat(rule.mayFollowFunctionalNaming(context)).isEmpty()
     }
 
@@ -139,7 +124,6 @@ class FunctionalNamingForHostnamesRuleTest {
         val context = getSwaggerContextWith(audience = "external-public", url = null)
 
         assertThat(rule.mustFollowFunctionalNaming(context)).isEmpty()
-        assertThat(rule.shouldFollowFunctionalNaming(context)).isEmpty()
         assertThat(rule.mayFollowFunctionalNaming(context)).isEmpty()
     }
 
@@ -148,7 +132,6 @@ class FunctionalNamingForHostnamesRuleTest {
         val context = getSwaggerContextWith(audience = null, url = "infrastructure-api-linter.zalandoapis.com")
 
         assertThat(rule.mustFollowFunctionalNaming(context)).isEmpty()
-        assertThat(rule.shouldFollowFunctionalNaming(context)).isEmpty()
         assertThat(rule.mayFollowFunctionalNaming(context)).isEmpty()
     }
 
@@ -157,7 +140,6 @@ class FunctionalNamingForHostnamesRuleTest {
         val context = getSwaggerContextWith(audience = "external-partner", url = "api.merchants.zalando.com")
 
         assertThat(rule.mustFollowFunctionalNaming(context)).isEmpty()
-        assertThat(rule.shouldFollowFunctionalNaming(context)).isEmpty()
         assertThat(rule.mayFollowFunctionalNaming(context)).isEmpty()
     }
 
