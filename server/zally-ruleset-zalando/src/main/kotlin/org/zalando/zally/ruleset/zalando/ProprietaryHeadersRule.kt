@@ -13,17 +13,17 @@ import io.swagger.v3.oas.models.parameters.Parameter
     ruleSet = ZalandoRuleSet::class,
     id = "183",
     severity = Severity.SHOULD,
-    title = "Use Only the Specified Proprietary Zalando Headers"
+    title = "Use Only the Specified Linz Headers"
 )
 class ProprietaryHeadersRule(rulesConfig: Config) {
-    private val zalandoHeaders = rulesConfig.getConfig(javaClass.simpleName).getStringList("zalando_headers")
+    private val linzHeaders = rulesConfig.getConfig(javaClass.simpleName).getStringList("linz_headers")
     private val standardRequestHeaders =
         rulesConfig.getConfig(javaClass.simpleName).getStringList("standard_request_headers")
     private val standardResponseHeaders =
         rulesConfig.getConfig(javaClass.simpleName).getStringList("standard_response_headers")
 
-    private val requestHeaders = (standardRequestHeaders + zalandoHeaders).map { it.lowercase() }
-    private val responseHeaders = (standardResponseHeaders + zalandoHeaders).map { it.lowercase() }
+    private val requestHeaders = (standardRequestHeaders + linzHeaders).map { it.lowercase() }
+    private val responseHeaders = (standardResponseHeaders + linzHeaders).map { it.lowercase() }
 
     private val requestDescription = "use only standardized or specified request headers"
     private val responseDescription = "use only standardized or specified response headers"
