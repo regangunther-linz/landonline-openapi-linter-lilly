@@ -12,16 +12,15 @@ import org.zalando.zally.core.util.getAllSecuritySchemes
 import org.zalando.zally.core.util.isOAuth2
 import org.zalando.zally.rule.api.Check
 import org.zalando.zally.rule.api.Context
-import org.zalando.zally.rule.api.Rule
 import org.zalando.zally.rule.api.Severity
 import org.zalando.zally.rule.api.Violation
 
-@Rule(
-    ruleSet = ZalandoRuleSet::class,
-    id = "105",
-    severity = Severity.MUST,
-    title = "Secure All Endpoints With Scopes"
-)
+// @Rule(
+//    ruleSet = ZalandoRuleSet::class,
+//    id = "105",
+//    severity = Severity.MUST,
+//    title = "Secure All Endpoints With Scopes"
+// )
 class SecureAllEndpointsWithScopesRule(rulesConfig: Config) {
 
     private val scopeRegex = Regex(

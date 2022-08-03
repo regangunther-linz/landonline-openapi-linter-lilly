@@ -6,16 +6,15 @@ import org.zalando.zally.core.util.isBearer
 import org.zalando.zally.core.util.isOAuth2
 import org.zalando.zally.rule.api.Check
 import org.zalando.zally.rule.api.Context
-import org.zalando.zally.rule.api.Rule
 import org.zalando.zally.rule.api.Severity
 import org.zalando.zally.rule.api.Violation
 
-@Rule(
-    ruleSet = ZalandoRuleSet::class,
-    id = "104",
-    severity = Severity.MUST,
-    title = "Secure Endpoints"
-)
+// @Rule(
+//    ruleSet = ZalandoRuleSet::class,
+//    id = "104",
+//    severity = Severity.MUST,
+//    title = "Secure Endpoints"
+// )
 class SecureAllEndpointsRule {
 
     @Check(severity = Severity.MUST)
