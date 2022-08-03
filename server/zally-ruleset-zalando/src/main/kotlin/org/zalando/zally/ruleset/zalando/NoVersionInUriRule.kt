@@ -2,19 +2,18 @@ package org.zalando.zally.ruleset.zalando
 
 import org.zalando.zally.rule.api.Check
 import org.zalando.zally.rule.api.Context
-import org.zalando.zally.rule.api.Rule
 import org.zalando.zally.rule.api.Severity
 import org.zalando.zally.rule.api.Violation
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.PathItem
 import io.swagger.v3.oas.models.servers.Server
 
-@Rule(
-    ruleSet = ZalandoRuleSet::class,
-    id = "115",
-    severity = Severity.MUST,
-    title = "Do Not Use URI Versioning"
-)
+// @Rule(
+//    ruleSet = ZalandoRuleSet::class,
+//    id = "115",
+//    severity = Severity.MUST,
+//    title = "Do Not Use URI Versioning"
+// )
 class NoVersionInUriRule {
     private val description = "URL contains version number"
     private val versionRegex = "(.*)v[0-9]+(.*)".toRegex()
