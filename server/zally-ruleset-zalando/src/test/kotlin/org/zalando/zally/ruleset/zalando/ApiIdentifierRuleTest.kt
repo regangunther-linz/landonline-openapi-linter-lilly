@@ -40,7 +40,7 @@ class ApiIdentifierRuleTest {
 
     @Test
     fun incorrectResourceLengthApiIdIsSet() {
-        val context = withApiId("partner-api-v1")
+        val context = withApiId("internal-api-v1")
 
         val violation = rule.validate(context)
 
@@ -51,7 +51,7 @@ class ApiIdentifierRuleTest {
 
     @Test
     fun incorrectVersion() {
-        val context = withApiId("partner-api-v")
+        val context = withApiId("internal-titles-v")
 
         val violation = rule.validate(context)
 
@@ -62,7 +62,7 @@ class ApiIdentifierRuleTest {
 
     @Test
     fun incorrectVersionLengthLengthApiIdIsSet() {
-        val context = withApiId("partner-api-v123")
+        val context = withApiId("internal-titles-v123")
 
         val violation = rule.validate(context)
 
@@ -73,7 +73,7 @@ class ApiIdentifierRuleTest {
 
     @Test
     fun incorrectNoVersion() {
-        val context = withApiId("partner-api")
+        val context = withApiId("internal-titles")
 
         val violation = rule.validate(context)
 
@@ -84,7 +84,7 @@ class ApiIdentifierRuleTest {
 
     @Test
     fun incorrectOnlyTwoElements() {
-        val context = withApiId("partner-v1")
+        val context = withApiId("internal-v1")
 
         val violation = rule.validate(context)
 
@@ -95,7 +95,7 @@ class ApiIdentifierRuleTest {
 
     @Test
     fun incorrectOnlyOneElement() {
-        val context = withApiId("partner")
+        val context = withApiId("internal")
 
         val violation = rule.validate(context)
 
