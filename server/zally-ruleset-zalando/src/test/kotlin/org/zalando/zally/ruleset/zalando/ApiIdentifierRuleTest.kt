@@ -10,17 +10,102 @@ class ApiIdentifierRuleTest {
     private val rule = ApiIdentifierRule()
 
     @Test
-    fun correctApiIdIsSet() {
-        val context = withApiId("zally-api")
+    fun correctPublicApiIdIsSet() {
+        val context = withApiId("public-titles-v1")
 
         val violation = rule.validate(context)
 
         assertThat(violation)
             .isNull()
     }
+    @Test
+    fun correctInternalApiIdIsSet() {
+        val context = withApiId("internal-titles-v1")
+
+        val violation = rule.validate(context)
+
+        assertThat(violation)
+            .isNull()
+    }
+    @Test
+    fun incorrectPartnerApiIdIsSet() {
+        val context = withApiId("partner-titles-v1")
+
+        val violation = rule.validate(context)
+
+        assertThat(violation)
+            .pointerEqualTo("/info/x-api-id")
+            .descriptionMatches(".*doesn't match.*")
+    }
 
     @Test
-    fun incorrectIdIsSet() {
+    fun incorrectResourceLengthApiIdIsSet() {
+        val context = withApiId("partner-api-v1")
+
+        val violation = rule.validate(context)
+
+        assertThat(violation)
+            .pointerEqualTo("/info/x-api-id")
+            .descriptionMatches(".*doesn't match.*")
+    }
+
+    @Test
+    fun incorrectVersion() {
+        val context = withApiId("partner-api-v")
+
+        val violation = rule.validate(context)
+
+        assertThat(violation)
+            .pointerEqualTo("/info/x-api-id")
+            .descriptionMatches(".*doesn't match.*")
+    }
+
+    @Test
+    fun incorrectVersionLengthLengthApiIdIsSet() {
+        val context = withApiId("partner-api-v123")
+
+        val violation = rule.validate(context)
+
+        assertThat(violation)
+            .pointerEqualTo("/info/x-api-id")
+            .descriptionMatches(".*doesn't match.*")
+    }
+
+    @Test
+    fun incorrectNoVersion() {
+        val context = withApiId("partner-api")
+
+        val violation = rule.validate(context)
+
+        assertThat(violation)
+            .pointerEqualTo("/info/x-api-id")
+            .descriptionMatches(".*doesn't match.*")
+    }
+
+    @Test
+    fun incorrectOnlyTwoElements() {
+        val context = withApiId("partner-v1")
+
+        val violation = rule.validate(context)
+
+        assertThat(violation)
+            .pointerEqualTo("/info/x-api-id")
+            .descriptionMatches(".*doesn't match.*")
+    }
+
+    @Test
+    fun incorrectOnlyOneElement() {
+        val context = withApiId("partner")
+
+        val violation = rule.validate(context)
+
+        assertThat(violation)
+            .pointerEqualTo("/info/x-api-id")
+            .descriptionMatches(".*doesn't match.*")
+    }
+
+    @Test
+    fun incorrectCharactersUsed() {
         val context = withApiId("This?iS//some|Incorrect+&ApI)(id!!!")
         val violation = rule.validate(context)!!
 
