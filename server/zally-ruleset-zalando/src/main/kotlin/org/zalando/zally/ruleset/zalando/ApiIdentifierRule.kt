@@ -14,7 +14,7 @@ import org.zalando.zally.rule.api.Violation
     title = "Provide API Identifier"
 )
 class ApiIdentifierRule {
-    private val apiIdPattern = """^[a-z0-9][a-z0-9-:.]{6,62}[a-z0-9]$""".toRegex()
+    private val apiIdPattern = """^(internal|public)\-[a-zA-Z0-9]{4,}\-v\d{1,2}$""".toRegex()
 
     private val noApiIdDesc = "API Identifier should be provided"
     private val invalidApiIdDesc = "API Identifier doesn't match the pattern $apiIdPattern"
