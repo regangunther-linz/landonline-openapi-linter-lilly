@@ -16,7 +16,7 @@ Lilly is a quality assurance tool. It's a linter for OpenAPI specifications, whi
 - Provides best practices and advices
 
 Its standard configuration will check your APIs against the rules defined in
-[LINZ RESTful Guidelines](https://linz.github.io/step-api-restful-guidelines/),
+[LINZ RESTful Guidelines](https://linz.github.io/landonline-api-restful-guidelines/),
 but anyone can use it **out-of-the-box**.
 
 Lilly's easy-to-use [CLI](cli/README.md) uses the server in the background so that
@@ -76,7 +76,7 @@ com/8-openapi-linters/)
 comparing different OpenAPI linters.
 
 So why should you choose Lilly?
-- It supports [LINZ RESTful Guidelines](https://linz.github.io/step-api-restful-guidelines/)
+- It supports [LINZ RESTful Guidelines](https://linz.github.io/landonline-api-restful-guidelines/)
 - It can be used in multiple ways: RESTful API, CLI and Web interface
 - Highly customizable (with Kotlin)  
 
