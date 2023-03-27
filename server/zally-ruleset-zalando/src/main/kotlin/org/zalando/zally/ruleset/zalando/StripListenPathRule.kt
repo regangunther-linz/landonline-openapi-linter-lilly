@@ -24,9 +24,8 @@ class StripListenPathRule() {
         val stripValue = context.api.extensions?.get(extensionName)
 
         return when (stripValue) {
-            is Boolean , null -> null
+            is Boolean, null -> null
             else -> context.violation(invalidType, extensionPointer)
         }
     }
 }
-

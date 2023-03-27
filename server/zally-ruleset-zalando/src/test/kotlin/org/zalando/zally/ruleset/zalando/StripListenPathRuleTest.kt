@@ -48,10 +48,9 @@ class StripListenPathRuleTest {
     }
 
     private fun withValue(stripValue: String? = null): Context {
-        var stripString =  ""
-        if (stripValue != null){
+        var stripString = ""
+        if (stripValue != null) {
             stripString = "x-gateway-strip-listen-path: $stripValue"
-
         }
 
         val content = """
@@ -65,5 +64,4 @@ class StripListenPathRuleTest {
 
         return DefaultContextFactory().getOpenApiContext(content)
     }
-
 }
