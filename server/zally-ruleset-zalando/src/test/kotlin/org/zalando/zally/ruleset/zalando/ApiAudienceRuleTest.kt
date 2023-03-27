@@ -31,6 +31,16 @@ class ApiAudienceRuleTest {
     }
 
     @Test
+    fun incorrectAudienceNotYetImplemented() {
+        val context = withAudience("external-partner")
+        val violation = rule.validate(context)
+
+        assertThat(violation)
+            .pointerEqualTo("/info/x-audience")
+            .descriptionMatches(".*doesn't match.*")
+    }
+
+    @Test
     fun noApiAudienceIsSet() {
         val context = withAudience("null")
         val violation = rule.validate(context)
