@@ -31,7 +31,7 @@ export function ViolationsTab({
         </a>{' '}
         conforms to&nbsp;
         <a
-          href="https://linz.github.io/step-api-restful-guidelines/"
+          href="https://linz.github.io/landonline-api-restful-guidelines/"
           target="_blank"
           className="dc-link"
         >
