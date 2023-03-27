@@ -100,7 +100,6 @@ class RestApiViolationsTest : RestApiBaseTest() {
         assertThat(responseEntity.body!!.detail).isNotEmpty()
     }
 
-
     @Test
     @Throws(IOException::class)
     fun shouldRespondWithBadRequestWhenApiDefinitionFieldIsMissing() {
