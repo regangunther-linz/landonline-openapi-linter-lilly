@@ -5,18 +5,23 @@ import org.zalando.zally.core.toJsonPointer
 import org.zalando.zally.core.util.allFlows
 import org.zalando.zally.core.util.isBearer
 import org.zalando.zally.core.util.isOAuth2
-import org.zalando.zally.rule.api.*
+import org.zalando.zally.rule.api.Check
+import org.zalando.zally.rule.api.Context
+import org.zalando.zally.rule.api.Rule
+import org.zalando.zally.rule.api.Severity
+import org.zalando.zally.rule.api.Violation
 
 @Rule(
     ruleSet = ZalandoRuleSet::class,
     id = "104",
     severity = Severity.MUST,
     title = "Secure Endpoints"
- )
+)
 class SecureAllEndpointsRule(rulesConfig: Config) {
 
     private val protectedAudiences = rulesConfig.getStringList("${javaClass.simpleName}.protectedAudiences").toSet()
     private val audience = "x-audience"
+
     @Check(severity = Severity.MUST)
     fun checkHasValidSecuritySchemes(context: Context): Violation? {
         val isProtectedAudience = protectedAudiences.contains(context.api.info?.extensions?.get(audience))
@@ -39,7 +44,6 @@ class SecureAllEndpointsRule(rulesConfig: Config) {
         }?.map {
             context.violation("API must be secured by Bearer Authentication", it)
         }.orEmpty()
-
 
     @Check(severity = Severity.MUST)
     fun checkUsedScopesAreSpecified(context: Context): List<Violation> {
