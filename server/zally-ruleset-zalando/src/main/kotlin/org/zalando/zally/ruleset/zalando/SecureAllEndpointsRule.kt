@@ -1,30 +1,38 @@
 package org.zalando.zally.ruleset.zalando
 
+import com.typesafe.config.Config
 import org.zalando.zally.core.toJsonPointer
 import org.zalando.zally.core.util.allFlows
 import org.zalando.zally.core.util.isBearer
 import org.zalando.zally.core.util.isOAuth2
 import org.zalando.zally.rule.api.Check
 import org.zalando.zally.rule.api.Context
+import org.zalando.zally.rule.api.Rule
 import org.zalando.zally.rule.api.Severity
 import org.zalando.zally.rule.api.Violation
 
-// @Rule(
-//    ruleSet = ZalandoRuleSet::class,
-//    id = "104",
-//    severity = Severity.MUST,
-//    title = "Secure Endpoints"
-// )
-class SecureAllEndpointsRule {
+@Rule(
+    ruleSet = ZalandoRuleSet::class,
+    id = "104",
+    severity = Severity.MUST,
+    title = "Secure Endpoints"
+)
+class SecureAllEndpointsRule(rulesConfig: Config) {
+
+    private val protectedAudiences = rulesConfig.getStringList("${javaClass.simpleName}.protectedAudiences").toSet()
+    private val audience = "x-audience"
 
     @Check(severity = Severity.MUST)
     fun checkHasValidSecuritySchemes(context: Context): Violation? {
+        val isProtectedAudience = protectedAudiences.contains(context.api.info?.extensions?.get(audience))
+        if (!isProtectedAudience) return null
+
         val valid = context.api.components?.securitySchemes?.values?.filter {
-            it.isOAuth2() || it.isBearer()
+            it.isBearer()
         }.orEmpty()
 
         return if (valid.isEmpty()) context.violation(
-            "API must be secured by OAuth2 or Bearer Authentication",
+            "API must be secured by Bearer Authentication",
             "/components/securitySchemes".toJsonPointer()
         ) else null
     }
@@ -32,9 +40,9 @@ class SecureAllEndpointsRule {
     @Check(severity = Severity.MUST)
     fun checkHasNoInvalidSecuritySchemes(context: Context): List<Violation> =
         context.api.components?.securitySchemes?.values?.filterNot {
-            it.isOAuth2() || it.isBearer()
+            it.isBearer()
         }?.map {
-            context.violation("API must be secured by OAuth2 or Bearer Authentication", it)
+            context.violation("API must be secured by Bearer Authentication", it)
         }.orEmpty()
 
     @Check(severity = Severity.MUST)

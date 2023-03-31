@@ -9,18 +9,20 @@ import io.swagger.v3.oas.models.security.SecurityScheme
 import org.zalando.zally.core.util.allFlows
 import org.zalando.zally.core.util.allScopes
 import org.zalando.zally.core.util.getAllSecuritySchemes
+import org.zalando.zally.core.util.isBearer
 import org.zalando.zally.core.util.isOAuth2
 import org.zalando.zally.rule.api.Check
 import org.zalando.zally.rule.api.Context
+import org.zalando.zally.rule.api.Rule
 import org.zalando.zally.rule.api.Severity
 import org.zalando.zally.rule.api.Violation
 
-// @Rule(
-//    ruleSet = ZalandoRuleSet::class,
-//    id = "105",
-//    severity = Severity.MUST,
-//    title = "Secure All Endpoints With Scopes"
-// )
+@Rule(
+    ruleSet = ZalandoRuleSet::class,
+    id = "105",
+    severity = Severity.MUST,
+    title = "Secure All Endpoints With Scopes"
+)
 class SecureAllEndpointsWithScopesRule(rulesConfig: Config) {
 
     private val scopeRegex = Regex(
@@ -69,9 +71,15 @@ class SecureAllEndpointsWithScopesRule(rulesConfig: Config) {
                                 matchingScheme == null -> {
                                     context.violation("Security scheme $opSchemeName not found", op)
                                 }
+
                                 matchingScheme.isOAuth2() -> {
                                     validateOAuth2Schema(context, op, opScopes, matchingScheme, opSchemeName)
                                 }
+
+                                matchingScheme.isBearer() -> {
+                                    validateBearer(context, op, opScopes, matchingScheme, opSchemeName)
+                                }
+
                                 else -> null
                             } // Scopes are only used with OAuth 2 and OpenID Connect
                         }
@@ -109,6 +117,18 @@ class SecureAllEndpointsWithScopesRule(rulesConfig: Config) {
                 "Endpoint is secured by undefined OAuth2 scope(s): $schemeName:${undefined.joinToString()}",
                 op.security ?: op
             )
+        } else null
+    }
+
+    private fun validateBearer(
+        context: Context,
+        op: Operation,
+        requestedScopes: List<String?>,
+        definedScheme: SecurityScheme,
+        schemeName: String
+    ): Violation? {
+        return if (requestedScopes.isEmpty() || requestedScopes.filterNotNull().any { !scopeRegex.matches(it) }) {
+            return context.violation("scope/s '$requestedScopes' do not match regex '$scopeRegex'", op.security ?: op)
         } else null
     }
 
