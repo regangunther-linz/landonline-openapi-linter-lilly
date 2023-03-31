@@ -39,16 +39,12 @@ consumes:
 - application/json
 
 securityDefinitions:
-  oauth2:
-    type: oauth2
-    flow: implicit
-    authorizationUrl: https://example.com/oauth2/dialog
-    scopes:
-      uid: Unique identifier of the user accessing the service.
-      api-is.api-definition.write: Scope allowing the user to write API definitions.
+  BearerAuth:
+    type: http
+    scheme: bearer
 
 security:
-- oauth2: [uid, api-is.api-repository.write]
+- BearerAuth: [linz-domain:full]
 
 parameters:
   ApiId:
@@ -111,8 +107,8 @@ paths:
       tags:
       - APIs
       security:
-      - oauth2:
-        - uid
+      - BearerAuth:
+        - linz-domain:full
       parameters:
       - $ref: "#/parameters/LifecycleState"
       responses:
@@ -136,8 +132,8 @@ paths:
       tags:
       - APIs
       security:
-      - oauth2:
-        - uid
+      - BearerAuth:
+        - linz-domain:full
       parameters:
       - $ref: "#/parameters/ApiId"
       responses:
@@ -157,8 +153,8 @@ paths:
       - APIs
       - Versions
       security:
-      - oauth2:
-        - uid
+      - BearerAuth:
+        - linz-domain:full
       parameters:
       - $ref: "#/parameters/ApiId"
       - $ref: "#/parameters/LifecycleState"
@@ -184,8 +180,8 @@ paths:
       - APIs
       - Versions
       security:
-      - oauth2:
-        - uid
+      - BearerAuth:
+        - linz-domain:full
       parameters:
       - $ref: "#/parameters/ApiId"
       - $ref: "#/parameters/VersionId"
@@ -207,8 +203,8 @@ paths:
       - Versions
       - Definitions
       security:
-      - oauth2:
-        - uid
+      - BearerAuth:
+        - linz-domain:full
       parameters:
       - $ref: "#/parameters/ApiId"
       - $ref: "#/parameters/VersionId"
@@ -230,8 +226,8 @@ paths:
       - APIs
       - Deployments
       security:
-      - oauth2:
-        - uid
+      - BearerAuth:
+        - linz-domain:full
       parameters:
       - $ref: "#/parameters/ApiId"
       responses:
@@ -255,8 +251,8 @@ paths:
       tags:
       - Applications
       security:
-      - oauth2:
-        - uid
+      - BearerAuth:
+        - linz-domain:full
       responses:
         200:
           description: List of Applications
@@ -278,8 +274,8 @@ paths:
       tags:
       - Applications
       security:
-      - oauth2:
-        - uid
+      - BearerAuth:
+        - linz-domain:full
       parameters:
       - $ref: '#/parameters/ApplicationName'
       responses:
@@ -298,8 +294,8 @@ paths:
       tags:
       - Definitions
       security:
-      - oauth2:
-        - uid
+      - BearerAuth:
+        - linz-domain:full
       parameters:
       - $ref: "#/parameters/CrawledAPIDefinition"
       responses:
