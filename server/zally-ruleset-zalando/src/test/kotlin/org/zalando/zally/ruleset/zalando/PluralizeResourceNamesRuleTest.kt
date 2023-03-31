@@ -51,7 +51,7 @@ class PluralizeResourceNamesRuleTest {
 
     @Test
     fun positiveCaseNoMustViolations() {
-        val context = DefaultContextFactory().getSwaggerContext(loadFileFromClasspath("fixtures/no_must_violations.yaml"))
+        val context = DefaultContextFactory().getOpenApiContext(loadFileFromClasspath("fixtures/no_must_violations.yaml"))
         val violations = rule.validate(context)
         assertThat(violations).isEmpty()
     }
