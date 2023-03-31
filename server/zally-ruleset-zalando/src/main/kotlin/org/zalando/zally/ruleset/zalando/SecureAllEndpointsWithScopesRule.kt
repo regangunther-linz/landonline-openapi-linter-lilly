@@ -6,21 +6,15 @@ import io.swagger.v3.oas.models.Operation
 import io.swagger.v3.oas.models.PathItem
 import io.swagger.v3.oas.models.security.SecurityRequirement
 import io.swagger.v3.oas.models.security.SecurityScheme
-import org.zalando.zally.core.util.allFlows
-import org.zalando.zally.core.util.allScopes
-import org.zalando.zally.core.util.getAllSecuritySchemes
-import org.zalando.zally.core.util.isOAuth2
-import org.zalando.zally.rule.api.Check
-import org.zalando.zally.rule.api.Context
-import org.zalando.zally.rule.api.Severity
-import org.zalando.zally.rule.api.Violation
+import org.zalando.zally.core.util.*
+import org.zalando.zally.rule.api.*
 
-// @Rule(
-//    ruleSet = ZalandoRuleSet::class,
-//    id = "105",
-//    severity = Severity.MUST,
-//    title = "Secure All Endpoints With Scopes"
-// )
+@Rule(
+    ruleSet = ZalandoRuleSet::class,
+    id = "105",
+    severity = Severity.MUST,
+    title = "Secure All Endpoints With Scopes"
+ )
 class SecureAllEndpointsWithScopesRule(rulesConfig: Config) {
 
     private val scopeRegex = Regex(
@@ -72,6 +66,9 @@ class SecureAllEndpointsWithScopesRule(rulesConfig: Config) {
                                 matchingScheme.isOAuth2() -> {
                                     validateOAuth2Schema(context, op, opScopes, matchingScheme, opSchemeName)
                                 }
+                                matchingScheme.isBearer() -> {
+                                    validateBearer(context, op, opScopes, matchingScheme, opSchemeName)
+                                }
                                 else -> null
                             } // Scopes are only used with OAuth 2 and OpenID Connect
                         }
@@ -110,6 +107,17 @@ class SecureAllEndpointsWithScopesRule(rulesConfig: Config) {
                 op.security ?: op
             )
         } else null
+    }
+    private fun validateBearer(
+        context: Context,
+        op: Operation,
+        requestedScopes: List<String?>,
+        definedScheme: SecurityScheme,
+        schemeName: String
+    ): Violation? {
+        return if(requestedScopes.isEmpty() || requestedScopes.filterNotNull().any { !scopeRegex.matches(it) }){
+            return context.violation("scope/s '$requestedScopes' do not match regex '$scopeRegex'",op.security ?: op)
+        }else null
     }
 
     private fun pathFilter(entry: Map.Entry<String, PathItem?>): Boolean =
