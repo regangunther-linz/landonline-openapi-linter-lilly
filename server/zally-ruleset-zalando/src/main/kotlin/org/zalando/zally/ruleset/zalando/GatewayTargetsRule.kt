@@ -23,7 +23,6 @@ class GatewayTargetsRule(rulesConfig: Config) {
     private val extensionMissingDescription = "x-gateway-upstream-targets extension missing"
     private val extensionMissingTargetsDescription = "x-gateway-upstream-targets is missing the expected targets"
 
-
     @Check(severity = Severity.MUST)
     fun validateExtension(context: Context): Violation? {
         val extension = context.api.extensions?.get(extensionName) as? Map<*, *>
