@@ -17,12 +17,12 @@ import org.zalando.zally.rule.api.Violation
 
 class GatewayTargetsRule(rulesConfig: Config) {
 
-    private val gatewayTargets = rulesConfig.getObject("${javaClass.simpleName}.x-gateway-upstream-targets").toMap()
+    private val gatewayTargets = rulesConfig.getStringList("${javaClass.simpleName}.x-gateway-upstream-targets")
     private val extensionName = "x-gateway-upstream-targets"
     private val extensionPointer = "/$extensionName".toJsonPointer()
     private val extensionMissingDescription = "x-gateway-upstream-targets extension missing"
     private val extensionMissingTargetsDescription = "x-gateway-upstream-targets is missing the expected targets"
-    private val expectedKeys = gatewayTargets.keys
+
 
     @Check(severity = Severity.MUST)
     fun validateExtension(context: Context): Violation? {
@@ -30,7 +30,7 @@ class GatewayTargetsRule(rulesConfig: Config) {
         if (extension === null) {
             return context.violation(extensionMissingDescription, extensionPointer)
         } else {
-            val checkKeys = expectedKeys.all { extension.containsKey(it) }
+            val checkKeys = gatewayTargets.all { extension.containsKey(it) }
             if (checkKeys) {
                 return null
             } else {
