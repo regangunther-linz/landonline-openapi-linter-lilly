@@ -4,10 +4,6 @@ info:
   version: 1.0.0
   x-audience: component-internal
   x-api-id: internal-resource-v1
-  x-gateway-upstream-targets:
-    prod: http://httpbin.org/
-    dev: http://httpbin.org/
-    preprod: http://httpbin.org/
   description: >
     Repository API of the API Infrastructure Solution is currently used to
     manage APIs: Versions, Definitions, and
@@ -596,4 +592,3 @@ components:
             A human readable explanation specific to this occurrence of the
             problem.
           example: Connection to database timed out
-
