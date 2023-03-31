@@ -16,7 +16,7 @@ class SecureAllEndpointsWithScopesRuleTest {
     private val config = getConfigFromContent(
         """
         SecureAllEndpointsWithScopesRule {
-          scope_regex: "^(uid)|(([a-z-]+\\.){1,2}(read|write))${'$'}"
+          scope_regex: "linz-domain:full"
           path_whitelist: [
             "^/whitelisted/.*",
             /obscure/
@@ -28,7 +28,7 @@ class SecureAllEndpointsWithScopesRuleTest {
     private val rule = SecureAllEndpointsWithScopesRule(config)
 
     @Test
-    fun `checkDefinedScopeFormats with no security`() {
+    fun `Expect no violations from checkDefinedScopeFormats When no security`() {
         @Language("YAML")
         val yaml = """
             swagger: 2.0
@@ -42,7 +42,7 @@ class SecureAllEndpointsWithScopesRuleTest {
     }
 
     @Test
-    fun `checkDefinedScopeFormats with valid oauth2 scopes`() {
+    fun `Expect no violations from checkDefinedScopeFormats with valid oauth2 scopes`() {
         @Language("YAML")
         val yaml = """
             swagger: 2.0
@@ -63,7 +63,7 @@ class SecureAllEndpointsWithScopesRuleTest {
     }
 
     @Test
-    fun `checkDefinedScopeFormats with basic scopes`() {
+    fun `Expect no violations from checkDefinedScopeFormats with basic scopes`() {
         @Language("YAML")
         val yaml = """
             swagger: 2.0
@@ -83,7 +83,7 @@ class SecureAllEndpointsWithScopesRuleTest {
     }
 
     @Test
-    fun `checkDefinedScopeFormats with invalid oauth2 scopes`() {
+    fun `Expect violations from checkDefinedScopeFormats with invalid oauth2 scopes`() {
         @Language("YAML")
         val yaml = """
             swagger: 2.0
@@ -100,12 +100,12 @@ class SecureAllEndpointsWithScopesRuleTest {
         val violations = rule.checkDefinedScopeFormats(context)
 
         ZallyAssertions.assertThat(violations)
-            .descriptionsAllEqualTo("scope 'max' does not match regex '^(uid)|(([a-z-]+\\.){1,2}(read|write))\$'")
+            .descriptionsAllEqualTo("scope 'max' does not match regex 'linz-domain:full'")
             .pointersEqualTo("/securityDefinitions/implicit-oauth2/scopes")
     }
 
     @Test
-    fun `checkOperationsAreScoped with empty swagger`() {
+    fun `Expect no violations from checkOperationsAreScoped with empty swagger`() {
         @Language("YAML")
         val yaml = """
             swagger: 2.0
@@ -119,7 +119,7 @@ class SecureAllEndpointsWithScopesRuleTest {
     }
 
     @Test
-    fun `checkOperationsAreScoped with no scope`() {
+    fun `Expect violations from checkOperationsAreScoped with no security on path`() {
         @Language("YAML")
         val yaml = """
             swagger: "2.0"
@@ -147,7 +147,7 @@ class SecureAllEndpointsWithScopesRuleTest {
     }
 
     @Test
-    fun `checkOperationsAreScoped with defined scope`() {
+    fun `Expect no violations from checkOperationsAreScoped with path defined oauth scope`() {
         @Language("YAML")
         val yaml = """
             swagger: "2.0"
@@ -176,7 +176,7 @@ class SecureAllEndpointsWithScopesRuleTest {
     }
 
     @Test
-    fun `checkOperationsAreScoped with undefined scope`() {
+    fun `Expect violations from checkOperationsAreScoped with undefined path scope`() {
         @Language("YAML")
         val yaml = """
             swagger: "2.0"
@@ -207,7 +207,7 @@ class SecureAllEndpointsWithScopesRuleTest {
     }
 
     @Test
-    fun `checkOperationsAreScoped with defined top level scope`() {
+    fun `Expect no violations from checkOperationsAreScoped with defined top level scope`() {
         @Language("YAML")
         val yaml = """
             swagger: "2.0"
@@ -236,7 +236,7 @@ class SecureAllEndpointsWithScopesRuleTest {
     }
 
     @Test
-    fun `checkOperationsAreScoped with no scope on whitelisted path`() {
+    fun `Expect no violations from checkOperationsAreScoped with no scope on whitelisted path`() {
         @Language("YAML")
         val yaml = """
             swagger: "2.0"
@@ -267,7 +267,7 @@ class SecureAllEndpointsWithScopesRuleTest {
     }
 
     @Test
-    fun `checkOperationsAreScoped with no scopes defined with OpenAPI components`() {
+    fun `Expect violaton, when checkOperationsAreScoped with no scopes defined with OpenAPI components`() {
         @Language("YAML")
         val yaml = """
             openapi: 3.0.1
@@ -298,7 +298,7 @@ class SecureAllEndpointsWithScopesRuleTest {
     }
 
     @Test
-    fun `Rule supports Bearer security scheme`() {
+    fun `Expect no violaton when Bearer auth set at path level`() {
         @Language("YAML")
         val yaml = """
             openapi: 3.0.1
@@ -310,14 +310,7 @@ class SecureAllEndpointsWithScopesRuleTest {
                     200:
                       description: OK
                   security:
-                    - BearerAuth: ['scope.execute']
-              '/other-things':
-                get:
-                  responses:
-                    200:
-                      description: OK
-                  security:
-                    - BearerAuth: []
+                    - BearerAuth: ['linz-domain:full']
             components:      
               securitySchemes:
                 BearerAuth:
@@ -332,7 +325,7 @@ class SecureAllEndpointsWithScopesRuleTest {
     }
 
     @Test
-    fun `Unsecured path is detected using Bearer security scheme`() {
+    fun `Expect violations when path is does not define security`() {
         @Language("YAML")
         val yaml = """
             openapi: 3.0.1
@@ -343,7 +336,26 @@ class SecureAllEndpointsWithScopesRuleTest {
                   responses:
                     200:
                       description: OK
-              '/other-things':
+            components:      
+              securitySchemes:
+                BearerAuth:
+                  type: http
+                  scheme: bearer
+        """.trimIndent()
+
+        val context = DefaultContextFactory().getOpenApiContext(yaml)
+
+        val violations = rule.checkOperationsAreScoped(context)
+        assertThat(violations).hasSize(1)
+    }
+
+    @Test
+    fun `Expect violatons when empty Bearer Security Set on path  `() {
+        @Language("YAML")
+        val yaml = """
+            openapi: 3.0.1
+            paths:
+              '/things':
                 get:
                   responses:
                     200:
@@ -362,14 +374,40 @@ class SecureAllEndpointsWithScopesRuleTest {
         val violations = rule.checkOperationsAreScoped(context)
         assertThat(violations).hasSize(1)
     }
-
     @Test
-    fun `Rule supports Bearer global security scheme`() {
+    fun `Expect violatons when empty Bearer Security Set on top level  `() {
         @Language("YAML")
         val yaml = """
             openapi: 3.0.1
             security:
-              - BearerAuth: ['scope.execute']
+              - BearerAuth: []            
+            paths:
+              '/things':
+                get:
+                  responses:
+                    200:
+                      description: OK
+
+            components:      
+              securitySchemes:
+                BearerAuth:
+                  type: http
+                  scheme: bearer
+        """.trimIndent()
+
+        val context = DefaultContextFactory().getOpenApiContext(yaml)
+
+        val violations = rule.checkOperationsAreScoped(context)
+        assertThat(violations).hasSize(1)
+    }
+
+    @Test
+    fun `Expect no violation, When Bearer global security scheme`() {
+        @Language("YAML")
+        val yaml = """
+            openapi: 3.0.1
+            security:
+              - BearerAuth: ['linz-domain:full']
             paths:
               '/things':
                 get:
@@ -393,27 +431,19 @@ class SecureAllEndpointsWithScopesRuleTest {
         val violations = rule.checkOperationsAreScoped(context)
         assertThat(violations).isEmpty()
     }
-
     @Test
-    fun `Security scheme names match`() {
+    fun `Expect violaton, When scope linz-domain-full is not set for Bearer global security scheme then expect errors`() {
         @Language("YAML")
         val yaml = """
             openapi: 3.0.1
             security:
-              - AnotherBearerAuth: ['scope.execute']
+              - BearerAuth: ['some-scope:full']
             paths:
               '/things':
                 get:
                   responses:
                     200:
                       description: OK
-              '/other-things':
-                get:
-                  responses:
-                    200:
-                      description: OK
-                  security:
-                    - BearerAuth: []                      
             components:      
               securitySchemes:
                 BearerAuth:
@@ -425,5 +455,36 @@ class SecureAllEndpointsWithScopesRuleTest {
 
         val violations = rule.checkOperationsAreScoped(context)
         assertThat(violations).hasSize(1)
+    }
+
+    @Test
+    fun `Expect violaton, When Security scheme names don't match`() {
+        @Language("YAML")
+        val yaml = """
+            openapi: 3.0.1
+            security:
+              - AnotherSecurityScheme: ['scope.execute']
+            paths:
+              '/things':
+                get:
+                  responses:
+                    200:
+                      description: OK
+              '/other-things':
+                get:
+                  responses:
+                    200:
+                      description: OK
+            components:      
+              securitySchemes:
+                BearerAuth:
+                  type: http
+                  scheme: bearer
+        """.trimIndent()
+
+        val context = DefaultContextFactory().getOpenApiContext(yaml)
+
+        val violations = rule.checkOperationsAreScoped(context)
+        assertThat(violations).hasSize(2)
     }
 }

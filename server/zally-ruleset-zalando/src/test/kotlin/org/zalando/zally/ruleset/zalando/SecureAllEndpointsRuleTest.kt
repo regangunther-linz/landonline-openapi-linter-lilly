@@ -5,13 +5,29 @@ import org.zalando.zally.core.DefaultContextFactory
 import org.assertj.core.api.Assertions.assertThat
 import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.Test
+import org.zalando.zally.core.rulesConfig
 
 class SecureAllEndpointsRuleTest {
 
-    private val rule = SecureAllEndpointsRule()
+    private val rule = SecureAllEndpointsRule(rulesConfig)
 
     @Test
-    fun `checkHasValidSecuritySchemes should return violation if no security scheme is specified`() {
+    fun `checkHasValidSecuritySchemes should not return violation if no security scheme is specified when audience is public`() {
+        @Language("YAML")
+        val content = """
+            openapi: 3.0.1
+            info:
+              x-audience: "external-public"
+            
+        """.trimIndent()
+        val context = DefaultContextFactory().getOpenApiContext(content)
+
+        val violation = rule.checkHasValidSecuritySchemes(context)
+
+        assertThat(violation).isNull()
+    }
+    @Test
+    fun `checkHasValidSecuritySchemes should not return violation if no security scheme is specified and audience is not provided`() {
         @Language("YAML")
         val content = """
             openapi: 3.0.1
@@ -20,16 +36,48 @@ class SecureAllEndpointsRuleTest {
 
         val violation = rule.checkHasValidSecuritySchemes(context)
 
+        assertThat(violation).isNull()
+    }
+    @Test
+    fun `checkHasValidSecuritySchemes should return violation if no security scheme is specified and audience is company-internal`() {
+        @Language("YAML")
+        val content = """
+            openapi: 3.0.1
+            info:
+              x-audience: "company-internal"
+        """.trimIndent()
+        val context = DefaultContextFactory().getOpenApiContext(content)
+
+        val violation = rule.checkHasValidSecuritySchemes(context)
+
         assertThat(violation).isNotNull
-        assertThat(violation!!.description).isEqualTo("API must be secured by OAuth2 or Bearer Authentication")
+        assertThat(violation!!.description).isEqualTo("API must be secured by Bearer Authentication")
+        assertThat(violation.pointer.toString()).isEqualTo("/components/securitySchemes")
+    }
+    @Test
+    fun `checkHasValidSecuritySchemes should return violation if no security scheme is specified and audience is component-internal`() {
+        @Language("YAML")
+        val content = """
+            openapi: 3.0.1
+            info:
+              x-audience: "component-internal"
+        """.trimIndent()
+        val context = DefaultContextFactory().getOpenApiContext(content)
+
+        val violation = rule.checkHasValidSecuritySchemes(context)
+
+        assertThat(violation).isNotNull
+        assertThat(violation!!.description).isEqualTo("API must be secured by Bearer Authentication")
         assertThat(violation.pointer.toString()).isEqualTo("/components/securitySchemes")
     }
 
     @Test
-    fun `checkHasValidSecuritySchemes should return no violation if OAuth2 security scheme is specified`() {
+    fun `checkHasValidSecuritySchemes should return a violation if OAuth2 security scheme is specified`() {
         @Language("YAML")
         val content = """
             openapi: 3.0.1
+            info:
+              x-audience: "company-internal"
             components:
               securitySchemes:
                 company-oauth2:
@@ -46,14 +94,17 @@ class SecureAllEndpointsRuleTest {
 
         val violation = rule.checkHasValidSecuritySchemes(context)
 
-        assertThat(violation).isNull()
+        assertThat(violation).isNotNull
+        assertThat(violation!!.description).isEqualTo("API must be secured by Bearer Authentication")
+        assertThat(violation.pointer.toString()).isEqualTo("/components/securitySchemes")
     }
 
     @Test
-    fun `checkHasValidSecuritySchemes should return no violation if Bearer Authorization security sheme is specified`() {
+    fun `checkHasValidSecuritySchemes should not return violation if Bearer Authorization security scheme is specified`() {
         @Language("YAML")
         val content = """
             openapi: 3.0.1
+            x-audience: "company-internal"
             components:
               securitySchemes:
                 bearer:
@@ -69,10 +120,12 @@ class SecureAllEndpointsRuleTest {
     }
 
     @Test
-    fun `checkHasValidSecuritySchemes should return violation if invalid security scheme is specified`() {
+    fun `checkHasValidSecuritySchemes should return violation if invalid apikey security scheme is specified`() {
         @Language("YAML")
         val content = """
             openapi: 3.0.1
+            info:
+              x-audience: "company-internal"
             components:
               securitySchemes:
                 company-oauth2:
@@ -83,7 +136,7 @@ class SecureAllEndpointsRuleTest {
         val violation = rule.checkHasValidSecuritySchemes(context)
 
         assertThat(violation).isNotNull
-        assertThat(violation!!.description).isEqualTo("API must be secured by OAuth2 or Bearer Authentication")
+        assertThat(violation!!.description).isEqualTo("API must be secured by Bearer Authentication")
         assertThat(violation.pointer.toString()).isEqualTo("/components/securitySchemes")
     }
 
@@ -101,10 +154,12 @@ class SecureAllEndpointsRuleTest {
     }
 
     @Test
-    fun `checkHasNoInvalidSecuritySchemes should return no violation if OAuth2 security scheme is specified`() {
+    fun `checkHasNoInvalidSecuritySchemes should return violation if OAuth2 security scheme is specified`() {
         @Language("YAML")
         val content = """
             openapi: 3.0.1
+            info:
+              x-audience: "company-internal"
             components:
               securitySchemes:
                 company-oauth2:
@@ -121,14 +176,18 @@ class SecureAllEndpointsRuleTest {
 
         val violations = rule.checkHasNoInvalidSecuritySchemes(context)
 
-        assertThat(violations).isEmpty()
+        ZallyAssertions.assertThat(violations)
+            .descriptionsEqualTo("API must be secured by Bearer Authentication")
+            .pointersEqualTo("/components/securitySchemes/company-oauth2")
     }
 
     @Test
-    fun `checkHasNoInvalidSecuritySchemes should return no violation if Bearer Authorization security sheme is specified`() {
+    fun `checkHasNoInvalidSecuritySchemes should return no violation if Bearer Authorization security scheme is specified`() {
         @Language("YAML")
         val content = """
             openapi: 3.0.1
+            info:
+              x-audience: "company-internal"
             components:
               securitySchemes:
                 company-oauth2:
@@ -144,10 +203,12 @@ class SecureAllEndpointsRuleTest {
     }
 
     @Test
-    fun `checkHasNoInvalidSecuritySchemes should return violation if invalid security definition is specified`() {
+    fun `checkHasNoInvalidSecuritySchemes should return violation if invalid apikey security definition is specified`() {
         @Language("YAML")
         val content = """
             openapi: 3.0.1
+            info:
+              x-audience: "company-internal"
             components:
               securitySchemes:
                 company-oauth2:
@@ -158,7 +219,7 @@ class SecureAllEndpointsRuleTest {
         val violations = rule.checkHasNoInvalidSecuritySchemes(context)
 
         ZallyAssertions.assertThat(violations)
-            .descriptionsEqualTo("API must be secured by OAuth2 or Bearer Authentication")
+            .descriptionsEqualTo("API must be secured by Bearer Authentication")
             .pointersEqualTo("/components/securitySchemes/company-oauth2")
     }
 
@@ -167,6 +228,8 @@ class SecureAllEndpointsRuleTest {
         @Language("YAML")
         val content = """
             openapi: 3.0.1
+            info:
+              x-audience: "company-internal"
             paths:
               /article:
                 post:
@@ -199,6 +262,8 @@ class SecureAllEndpointsRuleTest {
         @Language("YAML")
         val content = """
             openapi: 3.0.1
+            info:
+              x-audience: "company-internal"
             paths:
               /article:
                 post:
@@ -235,6 +300,8 @@ class SecureAllEndpointsRuleTest {
         @Language("YAML")
         val content = """
             openapi: 3.0.1
+            info:
+              x-audience: "company-internal"
             paths:
               /article:
                 post:
