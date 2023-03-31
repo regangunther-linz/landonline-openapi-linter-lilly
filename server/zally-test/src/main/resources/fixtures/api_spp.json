@@ -11,6 +11,11 @@
       "url": "http://example.com"
     }
   },
+  "x-gateway-upstream-targets": {
+    "prod": "http://httpbin.org/",
+    "dev": "http://httpbin.org/",
+    "preprod": "http://httpbin.org/"
+  },
   "externalDocs" : {
     "description" : "An overview of the SPP data management services as a whole",
     "url" : "https://pages.github.bus.zalan.do/FashionInsightsCentre/spp-documentation/spp-design/spp-data-management-apis/"
