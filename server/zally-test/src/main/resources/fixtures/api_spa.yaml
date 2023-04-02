@@ -31,7 +31,10 @@ parameters:
     description: Uniquely identifies Partner within Zalando platform
     required: true
     type: string
-
+x-gateway-upstream-targets:
+  prod: "http://httpbin.org/"
+  preprod: "http://httpbin.org/"
+  dev: "http://httpbin.org/"
 paths:
   /partners:
     get:

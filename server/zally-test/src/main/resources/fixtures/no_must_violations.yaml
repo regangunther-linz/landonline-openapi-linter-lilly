@@ -44,6 +44,10 @@ externalDocs:
   url: https://github.com/zalando/api-discovery
 security:
   - BearerAuth: [linz-domain:full]
+x-gateway-upstream-targets:
+  prod: http://httpbin.org/
+  dev: http://httpbin.org/
+  preprod: http://httpbin.org/
 tags:
   - name: APIs
     description: Description of APIs
