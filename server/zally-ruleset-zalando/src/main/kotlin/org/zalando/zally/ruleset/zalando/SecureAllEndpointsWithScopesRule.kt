@@ -77,7 +77,7 @@ class SecureAllEndpointsWithScopesRule(rulesConfig: Config) {
                                 }
 
                                 matchingScheme.isBearer() -> {
-                                    validateBearer(context, op, opScopes, matchingScheme, opSchemeName)
+                                    validateBearer(context, op, opScopes)
                                 }
 
                                 else -> null
@@ -123,9 +123,7 @@ class SecureAllEndpointsWithScopesRule(rulesConfig: Config) {
     private fun validateBearer(
         context: Context,
         op: Operation,
-        requestedScopes: List<String?>,
-        definedScheme: SecurityScheme,
-        schemeName: String
+        requestedScopes: List<String?>
     ): Violation? {
         return if (requestedScopes.isEmpty() || requestedScopes.filterNotNull().any { !scopeRegex.matches(it) }) {
             return context.violation("scope/s '$requestedScopes' do not match regex '$scopeRegex'", op.security ?: op)
