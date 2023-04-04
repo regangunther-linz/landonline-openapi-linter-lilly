@@ -24,7 +24,7 @@ class ServersRule(rulesConfig: Config) {
     private val audienceExtension = "x-audience"
 
     //Assume URLS are public until audience is known
-    var regex: Regex = """"^https:\/\/public\.api(\{env\}\.)?landonline\.govt\.nz\/v\d+\/\w+${'$'}""".toRegex()
+    var regex: Regex = """^https:\/\/public\.api(\.)?(\{env\}\.)?landonline\.govt\.nz\/v\d+\/\w+${'$'}""".toRegex()
 
     @Check(severity = Severity.MUST)
     fun validate(context: Context): List<Violation> {
@@ -32,7 +32,7 @@ class ServersRule(rulesConfig: Config) {
         // If audience isn't public change the regex
         if (audience != "external-public") {
             regex = """^https?:\/\/api(\{env\}\.)?landonline\.govt\.nz\/v\d+\/\w+${'$'}""".toRegex()
-        })
+        }
         val violations = violatingServers(context.api)
             .map {
                 context.violation(description, it)
@@ -40,8 +40,8 @@ class ServersRule(rulesConfig: Config) {
         return violations
     }
 
-
     private fun violatingServers(api: OpenAPI): Collection<Server> =
-        api.servers.orEmpty().filter { it?.url?.matches(regex) ?: false }
+        api.servers.orEmpty().filter { !regex.matches(it.url)
+        }
 }
 
