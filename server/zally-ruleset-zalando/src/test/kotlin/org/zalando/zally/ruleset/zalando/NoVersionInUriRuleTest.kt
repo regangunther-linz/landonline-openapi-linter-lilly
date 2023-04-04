@@ -47,7 +47,7 @@ class NoVersionInUriRuleTest {
     }
 
     @Test
-    fun `checkServerURLs should return no violations if a server URL does not contain a version as base path`() {
+    fun `checkServerURLs should return violation if a server URL does not contain a version as base path`() {
         @Language("YAML")
         val spec = """
             openapi: 3.0.1
@@ -75,11 +75,12 @@ class NoVersionInUriRuleTest {
         """.trimIndent()
         val context = DefaultContextFactory().getOpenApiContext(spec)
 
-        val violations = rule.validate(context)
+        val violations = rule.checkServerURLs(context)
 
-        //assertEquals(2, violations.size)
-        //assertEquals("url doesn't pass regex", violations[0].description)
-        //assertEquals("/servers/0/url", violations[0].pointer.toString())
+        assertThat(violations).isNotEmpty
+        assertThat(violations).hasSize(1)
+        assertThat(violations[0].description).contains("URL contains version number")
+        assertThat(violations[0].pointer.toString()).isEqualTo("/paths/~1shop~1orders-v1~1{order-id}")
     }
 
     @Test
@@ -96,11 +97,12 @@ class NoVersionInUriRuleTest {
         """.trimIndent()
         val context = DefaultContextFactory().getOpenApiContext(spec)
 
-        val violations = rule.validate(context)
+        val violations = rule.checkServerURLs(context)
 
-        //assertEquals(2, violations.size)
-        //assertEquals("url doesn't pass regex", violations[0].description)
-        //assertEquals("/servers/0/url", violations[0].pointer.toString())
+        assertThat(violations).isNotEmpty
+        assertThat(violations).hasSize(1)
+        assertThat(violations[0].description).contains("URL contains version number")
+        assertThat(violations[0].pointer.toString()).isEqualTo("/paths/~1shop~1orders-v1~1{order-id}")
     }
 
 
@@ -118,10 +120,11 @@ class NoVersionInUriRuleTest {
         """.trimIndent()
         val context = DefaultContextFactory().getOpenApiContext(spec)
 
-        val violations = rule.validate(context)
+        val violations = rule.checkServerURLs(context)
 
-        //assertEquals(2, violations.size)
-        //assertEquals("url doesn't pass regex", violations[0].description)
-        //assertEquals("/servers/0/url", violations[0].pointer.toString())
+        assertThat(violations).isNotEmpty
+        assertThat(violations).hasSize(1)
+        assertThat(violations[0].description).contains("URL contains version number")
+        assertThat(violations[0].pointer.toString()).isEqualTo("/paths/~1shop~1orders-v1~1{order-id}")
     }
 }
