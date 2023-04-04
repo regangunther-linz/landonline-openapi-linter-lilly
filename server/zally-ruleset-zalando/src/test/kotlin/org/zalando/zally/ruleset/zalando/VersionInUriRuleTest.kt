@@ -11,48 +11,12 @@ class NoVersionInUriRuleTest {
     private val rule = NoVersionInUriRule()
 
     @Test
-    fun `checkServerURLs should return a violation if a server URL contains a version as base path`() {
+    fun `checkServerURLs should not return a violation if version correct`() {
         @Language("YAML")
         val spec = """
             openapi: 3.0.1
             servers:
-              - url: "https://inter.net/api/v1.0"
-        """.trimIndent()
-        val context = DefaultContextFactory().getOpenApiContext(spec)
-
-        val violations = rule.checkServerURLs(context)
-
-        assertThat(violations).isNotEmpty
-        assertThat(violations).hasSize(1)
-        assertThat(violations[0].description).contains("URL contains version number")
-        assertThat(violations[0].pointer.toString()).isEqualTo("/servers/0")
-    }
-
-    @Test
-    fun `checkServerURLs should return a violation if (sub) resource names contain version suffix`() {
-        @Language("YAML")
-        val spec = """
-            openapi: 3.0.1
-            paths:
-              /shop/orders-v1/{order-id}: {}
-        """.trimIndent()
-        val context = DefaultContextFactory().getOpenApiContext(spec)
-
-        val violations = rule.checkServerURLs(context)
-
-        assertThat(violations).isNotEmpty
-        assertThat(violations).hasSize(1)
-        assertThat(violations[0].description).contains("URL contains version number")
-        assertThat(violations[0].pointer.toString()).isEqualTo("/paths/~1shop~1orders-v1~1{order-id}")
-    }
-
-    @Test
-    fun `checkServerURLs should return violation if a server URL does not contain a version as base path`() {
-        @Language("YAML")
-        val spec = """
-            openapi: 3.0.1
-            servers:
-              - url: "https://inter.net/api/"
+              - url: "https://inter.govt.nz/v1/titles"
         """.trimIndent()
         val context = DefaultContextFactory().getOpenApiContext(spec)
 
@@ -62,16 +26,12 @@ class NoVersionInUriRuleTest {
     }
 
     @Test
-    fun `Expect violations When Component internal and missing version`() {
+    fun `checkServerURLs should return a violation if version in between two resources`() {
         @Language("YAML")
         val spec = """
-        openapi: 3.0.0
-        info:
-          x-audience: ${ApiAudience.COMPANY_INTERNAL}
-        servers:
-          - url: "https://api.landonline.govt.nz/anything"
-          - url: "https://api{env}.landonline.govt.nz/anything"               
-          
+            openapi: 3.0.1
+            servers:
+              - url: "https://inter.govt.nz/api/v1/titles"
         """.trimIndent()
         val context = DefaultContextFactory().getOpenApiContext(spec)
 
@@ -79,8 +39,62 @@ class NoVersionInUriRuleTest {
 
         assertThat(violations).isNotEmpty
         assertThat(violations).hasSize(1)
-        assertThat(violations[0].description).contains("URL contains version number")
-        assertThat(violations[0].pointer.toString()).isEqualTo("/paths/~1shop~1orders-v1~1{order-id}")
+        assertThat(violations[0].description).contains("URL must contain a single Major version number e.g. v1, v2 etc.")
+        assertThat(violations[0].pointer.toString()).isEqualTo("/servers/0")
+    }
+
+    @Test
+    fun `checkServerURLs should return a violation if version has dot in a server URL is second resouce in base path`() {
+        @Language("YAML")
+        val spec = """
+            openapi: 3.0.1
+            servers:
+              - url: "https://inter.govt.nz/api/v1.0"
+        """.trimIndent()
+        val context = DefaultContextFactory().getOpenApiContext(spec)
+
+        val violations = rule.checkServerURLs(context)
+
+        assertThat(violations).isNotEmpty
+        assertThat(violations).hasSize(1)
+        assertThat(violations[0].description).contains("URL must contain a single Major version number e.g. v1, v2 etc.")
+        assertThat(violations[0].pointer.toString()).isEqualTo("/servers/0")
+    }
+
+    @Test
+    fun `checkServerURLs should return a violation if version has dot in a server URL is first resouce in base path`() {
+        @Language("YAML")
+        val spec = """
+            openapi: 3.0.1
+            servers:
+              - url: "https://inter.govt.nz/v1.0/api"
+        """.trimIndent()
+        val context = DefaultContextFactory().getOpenApiContext(spec)
+
+        val violations = rule.checkServerURLs(context)
+
+        assertThat(violations).isNotEmpty
+        assertThat(violations).hasSize(1)
+        assertThat(violations[0].description).contains("URL must contain a single Major version number e.g. v1, v2 etc.")
+        assertThat(violations[0].pointer.toString()).isEqualTo("/servers/0")
+    }
+
+    @Test
+    fun `checkServerURLs should return violation if a server URL does not contain a version as base path`() {
+        @Language("YAML")
+        val spec = """
+            openapi: 3.0.1
+            servers:
+              - url: "https://inter.govt.nz/api/"
+        """.trimIndent()
+        val context = DefaultContextFactory().getOpenApiContext(spec)
+
+        val violations = rule.checkServerURLs(context)
+
+        assertThat(violations).isNotEmpty
+        assertThat(violations).hasSize(1)
+        assertThat(violations[0].description).contains("URL must contain a single Major version number e.g. v1, v2 etc.")
+        assertThat(violations[0].pointer.toString()).isEqualTo("/servers/0")
     }
 
     @Test
@@ -100,9 +114,9 @@ class NoVersionInUriRuleTest {
         val violations = rule.checkServerURLs(context)
 
         assertThat(violations).isNotEmpty
-        assertThat(violations).hasSize(1)
-        assertThat(violations[0].description).contains("URL contains version number")
-        assertThat(violations[0].pointer.toString()).isEqualTo("/paths/~1shop~1orders-v1~1{order-id}")
+        assertThat(violations).hasSize(2)
+        assertThat(violations[0].description).contains("URL must contain a single Major version number e.g. v1, v2 etc.")
+        assertThat(violations[0].pointer.toString()).isEqualTo("/servers/0")
     }
 
 
@@ -123,8 +137,8 @@ class NoVersionInUriRuleTest {
         val violations = rule.checkServerURLs(context)
 
         assertThat(violations).isNotEmpty
-        assertThat(violations).hasSize(1)
-        assertThat(violations[0].description).contains("URL contains version number")
-        assertThat(violations[0].pointer.toString()).isEqualTo("/paths/~1shop~1orders-v1~1{order-id}")
+        assertThat(violations).hasSize(2)
+        assertThat(violations[0].description).contains("URL must contain a single Major version number e.g. v1, v2 etc.")
+        assertThat(violations[0].pointer.toString()).isEqualTo("/servers/0")
     }
 }
