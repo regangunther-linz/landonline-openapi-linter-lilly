@@ -21,17 +21,16 @@ class ServerRuleTest {
         val spec = """
         openapi: 3.0.0
         info:
-          x-audience: ${ApiAudience.COMPANY_INTERNAL}
+          x-audience: ${ApiAudience.COMPANY_INTERNAL.code}
         servers:
           - url: "https://api.landonline.govt.nz/v22/anything"
-          - url: "https://api{env}.landonline.govt.nz/v22/anything"               
-          
+          - url: "https://api{env}.landonline.govt.nz/v22/anything"        
         """.trimIndent()
         val context = DefaultContextFactory().getOpenApiContext(spec)
 
         val violations = rule.validate(context)
-
-        //assertEquals(2, violations.size)
+        print(violations)
+        assertEquals(0, violations.size)
         //assertEquals("url doesn't pass regex", violations[0].description)
         //assertEquals("/servers/0/url", violations[0].pointer.toString())
     }
@@ -42,7 +41,7 @@ class ServerRuleTest {
         val spec = """
         openapi: 3.0.0
         info:
-          x-audience: ${ApiAudience.COMPANY_INTERNAL}
+          x-audience: ${ApiAudience.COMPANY_INTERNAL.code}
         servers:
           - url: "https://api.landonline.govt.nz/v22/anything"
           - url: "https://public.api{env}.landonline.govt.nz/v22/anything"               
@@ -52,7 +51,7 @@ class ServerRuleTest {
 
         val violations = rule.validate(context)
 
-        //assertEquals(2, violations.size)
+        assertEquals(1, violations.size)
         //assertEquals("url doesn't pass regex", violations[0].description)
         //assertEquals("/servers/0/url", violations[0].pointer.toString())
     }
@@ -63,7 +62,7 @@ class ServerRuleTest {
         val spec = """
         openapi: 3.0.0
         info:
-          x-audience: ${ApiAudience.COMPONENT_INTERNAL}
+          x-audience: ${ApiAudience.COMPONENT_INTERNAL.code}
         servers:
           - url: "https://api.landonline.govt.nz/v22/anything"
           - url: "https://api{env}.landonline.govt.nz/v22/anything"               
@@ -73,7 +72,7 @@ class ServerRuleTest {
 
         val violations = rule.validate(context)
 
-        //assertEquals(2, violations.size)
+        assertEquals(0, violations.size)
         //assertEquals("url doesn't pass regex", violations[0].description)
         //assertEquals("/servers/0/url", violations[0].pointer.toString())
     }
@@ -84,7 +83,7 @@ class ServerRuleTest {
         val spec = """
         openapi: 3.0.0
         info:
-          x-audience: ${ApiAudience.COMPANY_INTERNAL}
+          x-audience: ${ApiAudience.COMPANY_INTERNAL.code}
         servers:
           - url: "https://api.landonline.govt.nz/v22/anything"
           - url: "https://public.api{env}.landonline.govt.nz/v22/anything"               
@@ -94,7 +93,7 @@ class ServerRuleTest {
 
         val violations = rule.validate(context)
 
-        //assertEquals(2, violations.size)
+        assertEquals(1, violations.size)
         //assertEquals("url doesn't pass regex", violations[0].description)
         //assertEquals("/servers/0/url", violations[0].pointer.toString())
     }
@@ -105,7 +104,7 @@ class ServerRuleTest {
         val spec = """
         openapi: 3.0.0
         info:
-          x-audience: ${ApiAudience.EXTERNAL_PUBLIC}
+          x-audience: ${ApiAudience.EXTERNAL_PUBLIC.code}
         servers:
           - url: "https://public.api.landonline.govt.nz/v22/anything"
           - url: "https://public.api{env}.landonline.govt.nz/v22/anything"               
@@ -115,7 +114,7 @@ class ServerRuleTest {
 
         val violations = rule.validate(context)
 
-        //assertEquals(2, violations.size)
+        assertEquals(0, violations.size)
         //assertEquals("url doesn't pass regex", violations[0].description)
         //assertEquals("/servers/0/url", violations[0].pointer.toString())
     }
@@ -126,7 +125,7 @@ class ServerRuleTest {
         val spec = """
         openapi: 3.0.0
         info:
-          x-audience: ${ApiAudience.COMPANY_INTERNAL}
+          x-audience: ${ApiAudience.COMPANY_INTERNAL.code}
         servers:
           - url: "https://api.landonline.govt.nz/v22/anything"
           - url: "https://public.api{env}.landonline.govt.nz/v22/anything"               
@@ -136,7 +135,7 @@ class ServerRuleTest {
 
         val violations = rule.validate(context)
 
-        //assertEquals(2, violations.size)
+        assertEquals(1, violations.size)
         //assertEquals("url doesn't pass regex", violations[0].description)
         //assertEquals("/servers/0/url", violations[0].pointer.toString())
     }
@@ -147,7 +146,7 @@ class ServerRuleTest {
         val spec = """
         openapi: 3.0.0
         info:
-          x-audience: ${ApiAudience.EXTERNAL_PUBLIC}
+          x-audience: ${ApiAudience.EXTERNAL_PUBLIC.code}
         servers:
           - url: "https://api.landonline.govt.nz/v22/anything"
           - url: "https://api{env}.landonline.govt.nz/v22/anything"               
@@ -157,7 +156,7 @@ class ServerRuleTest {
 
         val violations = rule.validate(context)
 
-        //assertEquals(2, violations.size)
+        assertEquals(2, violations.size)
         //assertEquals("url doesn't pass regex", violations[0].description)
         //assertEquals("/servers/0/url", violations[0].pointer.toString())
     }
@@ -168,7 +167,7 @@ class ServerRuleTest {
         val spec = """
         openapi: 3.0.0
         info:
-          x-audience: ${ApiAudience.COMPANY_INTERNAL}
+          x-audience: ${ApiAudience.COMPANY_INTERNAL.code}
         servers:
           - url: "https://public.api.landonline.govt.nz/v22/anything"
           - url: "https://public.api{env}.landonline.govt.nz/v22/anything"               
@@ -178,7 +177,7 @@ class ServerRuleTest {
 
         val violations = rule.validate(context)
 
-        //assertEquals(2, violations.size)
+        assertEquals(2, violations.size)
         //assertEquals("url doesn't pass regex", violations[0].description)
         //assertEquals("/servers/0/url", violations[0].pointer.toString())
     }
@@ -189,7 +188,7 @@ class ServerRuleTest {
         val spec = """
         openapi: 3.0.0
         info:
-          x-audience: ${ApiAudience.COMPONENT_INTERNAL}
+          x-audience: ${ApiAudience.COMPONENT_INTERNAL.code}
         servers:
           - url: "https://public.api.landonline.govt.nz/v22/anything"
           - url: "https://public.api{env}.landonline.govt.nz/v22/anything"               
@@ -199,7 +198,7 @@ class ServerRuleTest {
 
         val violations = rule.validate(context)
 
-        //assertEquals(2, violations.size)
+        assertEquals(2, violations.size)
         //assertEquals("url doesn't pass regex", violations[0].description)
         //assertEquals("/servers/0/url", violations[0].pointer.toString())
     }
@@ -210,7 +209,7 @@ class ServerRuleTest {
         val spec = """
         openapi: 3.0.0
         info:
-          x-audience: ${ApiAudience.COMPANY_INTERNAL}
+          x-audience: ${ApiAudience.COMPANY_INTERNAL.code}
         servers:
           - url: "https://api.landonline.govt.nz/v12"
           - url: "https://api{env}.landonline.govt.nz/v12"               
@@ -220,7 +219,7 @@ class ServerRuleTest {
 
         val violations = rule.validate(context)
 
-        //assertEquals(2, violations.size)
+        assertEquals(2, violations.size)
         //assertEquals("url doesn't pass regex", violations[0].description)
         //assertEquals("/servers/0/url", violations[0].pointer.toString())
     }
@@ -231,7 +230,7 @@ class ServerRuleTest {
         val spec = """
         openapi: 3.0.0
         info:
-          x-audience: ${ApiAudience.COMPANY_INTERNAL}
+          x-audience: ${ApiAudience.COMPANY_INTERNAL.code}
         servers:
           - url: "https://api.landonline.govt.nz/v12/myresource/subresource"
           - url: "https://api{env}.landonline.govt.nz/v12/myresource/subresource"               
@@ -241,7 +240,7 @@ class ServerRuleTest {
 
         val violations = rule.validate(context)
 
-        //assertEquals(2, violations.size)
+        assertEquals(2, violations.size)
         //assertEquals("url doesn't pass regex", violations[0].description)
         //assertEquals("/servers/0/url", violations[0].pointer.toString())
     }
@@ -252,7 +251,7 @@ class ServerRuleTest {
         val spec = """
         openapi: 3.0.0
         info:
-          x-audience: ${ApiAudience.COMPANY_INTERNAL}
+          x-audience: ${ApiAudience.COMPANY_INTERNAL.code}
         servers:
           - url: "https://api.landonline.govt.nz/v12/myresource"
           - url: "https://api.landonline.govt.nz/v12/myresource"
@@ -273,15 +272,15 @@ class ServerRuleTest {
         val spec = """
         openapi: 3.0.0
         info:
-          x-audience: ${ApiAudience.COMPANY_INTERNAL}
+          x-audience: ${ApiAudience.COMPANY_INTERNAL.code}
         servers:
           - url: "https://api.landonline.govt.nz/v12/myresource"
           - url: "https://api{env}.landonline.govt.nz/v12/myresource"
-        variables:
-          env:
-            enum:
-              - .dev
-              - .env
+            variables:
+            env:
+              enum:
+                - .dev
+                - .env
             default: .dev
             description: Not prod environments
           
@@ -291,6 +290,71 @@ class ServerRuleTest {
         val violations = rule.validate(context)
 
         //assertEquals(2, violations.size)
+        //assertEquals("url doesn't pass regex", violations[0].description)
+        //assertEquals("/servers/0/url", violations[0].pointer.toString())
+    }
+
+    @Test
+    fun `Expect violations When Component internal and resource name before version`() {
+        @Language("YAML")
+        val spec = """
+        openapi: 3.0.0
+        info:
+          x-audience: ${ApiAudience.COMPANY_INTERNAL.code}
+        servers:
+          - url: "https://api.landonline.govt.nz/myresource/v12"
+          - url: "https://api.landonline.govt.nz/myresource/v1"
+          
+        """.trimIndent()
+        val context = DefaultContextFactory().getOpenApiContext(spec)
+
+        val violations = rule.validate(context)
+
+        //assertEquals(2, violations.size)
+        //assertEquals("url doesn't pass regex", violations[0].description)
+        //assertEquals("/servers/0/url", violations[0].pointer.toString())
+    }
+
+    @Test
+    fun `Expect no violations When Component internal and resource contains hyphens`() {
+        @Language("YAML")
+        val spec = """
+        openapi: 3.0.0
+        info:
+          x-audience: ${ApiAudience.COMPANY_INTERNAL.code}
+        servers:
+          - url: "https://api.landonline.govt.nz/v1/my-resource"
+          - url: "https://api.landonline.govt.nz/v33/my-resource"
+          - url: "https://api.landonline.govt.nz/v33/myresource"
+          
+        """.trimIndent()
+        val context = DefaultContextFactory().getOpenApiContext(spec)
+
+        val violations = rule.validate(context)
+
+        assertEquals(0, violations.size)
+        //assertEquals("url doesn't pass regex", violations[0].description)
+        //assertEquals("/servers/0/url", violations[0].pointer.toString())
+    }
+
+    @Test
+    fun `Expect violations When Component internal and resource contains digits`() {
+        @Language("YAML")
+        val spec = """
+        openapi: 3.0.0
+        info:
+          x-audience: ${ApiAudience.COMPANY_INTERNAL.code}
+        servers:
+          - url: "https://api.landonline.govt.nz/v1/myresource01"
+          - url: "https://api.landonline.govt.nz/v33/01my-resource"
+          - url: "https://api.landonline.govt.nz/v33/myresource"
+          
+        """.trimIndent()
+        val context = DefaultContextFactory().getOpenApiContext(spec)
+
+        val violations = rule.validate(context)
+
+        assertEquals(2, violations.size)
         //assertEquals("url doesn't pass regex", violations[0].description)
         //assertEquals("/servers/0/url", violations[0].pointer.toString())
     }
