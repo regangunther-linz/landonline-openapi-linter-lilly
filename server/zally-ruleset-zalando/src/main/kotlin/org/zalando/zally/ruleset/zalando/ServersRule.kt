@@ -24,14 +24,14 @@ class ServersRule(rulesConfig: Config) {
     private val audienceExtension = "x-audience"
 
     //Assume URLS are public until audience is known
-    var regex: Regex = """^https:\/\/public\.api(\.)?(\{env\}\.)?landonline\.govt\.nz\/v\d+\/\w+${'$'}""".toRegex()
+    var regex: Regex = """^https:\/\/public\.api(\.)?(\{env\}\.)?landonline\.govt\.nz\/v\d+\/[a-zA-Z]+(-[a-zA-Z]+)*$""".toRegex()
 
     @Check(severity = Severity.MUST)
     fun validate(context: Context): List<Violation> {
         val audience = context.api.info?.extensions?.get(audienceExtension)
         // If audience isn't public change the regex
         if (audience != "external-public") {
-            regex = """^https?:\/\/api(\{env\}\.)?landonline\.govt\.nz\/v\d+\/\w+${'$'}""".toRegex()
+            regex = """^https?:\/\/api(\.)?(\{env\}\.)?landonline\.govt\.nz\/v\d+\/[a-zA-Z]+(-[a-zA-Z]+)*$""".toRegex()
         }
         val violations = violatingServers(context.api)
             .map {
