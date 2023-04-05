@@ -7,7 +7,7 @@ import org.zalando.zally.core.DefaultContextFactory
 import org.junit.jupiter.api.Test
 import org.zalando.zally.ruleset.zalando.model.ApiAudience
 
-class ServerRuleTest {
+class ServersRuleTest {
 
     private val rule = ServersRule(rulesConfig)
 
