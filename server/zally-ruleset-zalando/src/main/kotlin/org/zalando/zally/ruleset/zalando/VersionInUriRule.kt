@@ -15,7 +15,7 @@ import org.zalando.zally.rule.api.Rule
     severity = Severity.MUST,
     title = "Should Use URI Versioning"
 )
-class NoVersionInUriRule {
+class VersionInUriRule {
     private val description = "URL must contain a single Major version number e.g. v1, v2 etc."
     private val versionRegex = "^.*.govt.nz/v\\d{1,2}/.*\$".toRegex()
 

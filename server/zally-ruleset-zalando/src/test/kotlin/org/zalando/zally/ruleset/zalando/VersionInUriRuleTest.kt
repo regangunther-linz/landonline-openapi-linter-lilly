@@ -6,9 +6,9 @@ import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.Test
 import org.zalando.zally.ruleset.zalando.model.ApiAudience
 
-class NoVersionInUriRuleTest {
+class VersionInUriRuleTest {
 
-    private val rule = NoVersionInUriRule()
+    private val rule = VersionInUriRule()
 
     @Test
     fun `checkServerURLs should not return a violation if version correct`() {
@@ -118,7 +118,6 @@ class NoVersionInUriRuleTest {
         assertThat(violations[0].description).contains("URL must contain a single Major version number e.g. v1, v2 etc.")
         assertThat(violations[0].pointer.toString()).isEqualTo("/servers/0")
     }
-
 
     @Test
     fun `Expect violations When Component internal and version too long`() {
