@@ -29,6 +29,22 @@ class ServersRuleTest {
     }
 
     @Test
+    fun `Expect violations When servers contain no urls`() {
+        @Language("YAML")
+        val spec = """
+        openapi: 3.0.0
+        info:
+          x-audience: ${ApiAudience.COMPANY_INTERNAL.code}
+        servers:
+          - url: "https://api.landonline.govt.nz/v22/anything"
+          - url:
+        """.trimIndent()
+        val context = DefaultContextFactory().getOpenApiContext(spec)
+        val violations = rule.validate(context)
+        assertEquals(1, violations.size)
+    }
+
+    @Test
     fun `Expect violations When Company internal and mixed api and public servers`() {
         @Language("YAML")
         val spec = """

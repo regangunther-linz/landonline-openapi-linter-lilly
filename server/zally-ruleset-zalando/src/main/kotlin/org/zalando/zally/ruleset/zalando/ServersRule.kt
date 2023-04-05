@@ -42,7 +42,7 @@ class ServersRule(rulesConfig: Config) {
         }
         val description = "url doesn't pass regex $regex"
         var filteredByUrl = api.servers.orEmpty().filter {
-            !regex.matches(it.url)
+            it.url != null && !regex.matches(it.url)
         }.toMutableList().map {
             context.violation(description, it)
         }
@@ -50,7 +50,7 @@ class ServersRule(rulesConfig: Config) {
             filteredByUrl
         } else {
             var missingEnv = api.servers.orEmpty().filter {
-                it.url.contains("{env}")
+                it.url != null && it.url.contains("{env}")
             }.toMutableList()
             return if (missingEnv.size == 0) {
                 listOf(context.violation(descriptionTemplateError, api.servers))
@@ -69,7 +69,7 @@ class ServersRule(rulesConfig: Config) {
     private fun violatingServersByVariables(api: OpenAPI): Collection<Server> {
         val returnServers = mutableListOf<Server>()
         for (server in api.servers.orEmpty()) {
-            if (server.url.contains("{env}")) {
+            if (server.url != null && server.url.contains("{env}")) {
                 var expectedVariable = ServerVariables()
                 var env = ServerVariable()
                 env.enum = listOf(".dev", ".env")
