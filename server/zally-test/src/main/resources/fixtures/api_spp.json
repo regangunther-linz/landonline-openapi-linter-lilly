@@ -11,6 +11,24 @@
       "url": "http://example.com"
     }
   },
+  "servers": [
+    {
+      "url": "https://api.landonline.govt.nz/my-proxy-generation-test-api"
+    },
+    {
+      "url": "https://api{env}.landonline.govt.nz/my-proxy-generation-test-api",
+      "variables": {
+        "env": {
+          "enum": [
+            ".dev",
+            ".env"
+          ],
+          "default": ".dev",
+          "description": "Not prod environments"
+        }
+      }
+    }
+  ],
   "x-gateway-upstream-targets": {
     "prod": "http://httpbin.org/",
     "dev": "http://httpbin.org/",

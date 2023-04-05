@@ -48,6 +48,15 @@ x-gateway-upstream-targets:
   prod: http://httpbin.org/
   dev: http://httpbin.org/
   preprod: http://httpbin.org/
+servers:
+  - url: "https://api.landonline.govt.nz/v12/myresource"
+  - url: "https://api{env}.landonline.govt.nz/v12/myresource"
+    variables:
+      env:
+        enum:
+          - .dev
+          - .env
+        default: .dev
 tags:
   - name: APIs
     description: Description of APIs
@@ -296,8 +305,6 @@ paths:
           description: API definition has been saved
         default:
           $ref: "#/components/responses/Error"
-servers:
-  - url: /
 components:
   parameters:
     ApiId:

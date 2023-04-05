@@ -7,16 +7,17 @@ import org.zalando.zally.rule.api.Violation
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.PathItem
 import io.swagger.v3.oas.models.servers.Server
+import org.zalando.zally.rule.api.Rule
 
-// @Rule(
-//    ruleSet = ZalandoRuleSet::class,
-//    id = "115",
-//    severity = Severity.MUST,
-//    title = "Do Not Use URI Versioning"
-// )
-class NoVersionInUriRule {
-    private val description = "URL contains version number"
-    private val versionRegex = "(.*)v[0-9]+(.*)".toRegex()
+@Rule(
+    ruleSet = ZalandoRuleSet::class,
+    id = "115",
+    severity = Severity.MUST,
+    title = "Should Use URI Versioning"
+)
+class VersionInUriRule {
+    private val description = "URL must contain a single Major version number e.g. v1, v2 etc."
+    private val versionRegex = "^.*.govt.nz/v\\d{1,2}/.*\$".toRegex()
 
     @Check(severity = Severity.MUST)
     fun checkServerURLs(context: Context): List<Violation> =
@@ -25,7 +26,7 @@ class NoVersionInUriRule {
 
     private fun violatingServers(api: OpenAPI): Collection<Server> =
         api.servers.orEmpty()
-            .filter { it?.url?.matches(versionRegex) ?: false }
+            .filter { it.url != null && !versionRegex.matches(it.url) }
 
     private fun violatingPaths(api: OpenAPI): Collection<PathItem> =
         api.paths.orEmpty().entries
