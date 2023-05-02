@@ -20,7 +20,7 @@ import io.swagger.v3.oas.models.servers.ServerVariables
 class ServersRule(rulesConfig: Config) {
 
     // Assume URLS are public until audience is known
-    var regex: Regex = """^https:\/\/public\.api(\.)?(\{env\}\.)?landonline\.govt\.nz\/v\d+\/[a-zA-Z]+(-[a-zA-Z]+)*$""".toRegex()
+    var regex: Regex = """^https:\/\/public\.api(\.)?(\{env\}\.)?landonline\.govt\.nz\/v\d+\/[a-z]+(-[a-z]+)*s$""".toRegex()
 
     private val descriptionEnv = "missing env variable for template"
     private val descriptionTemplateError = "servers must contain one templated url containing {env}"
@@ -38,7 +38,7 @@ class ServersRule(rulesConfig: Config) {
         val audience = api.info?.extensions?.get(audienceExtension)
         // If audience isn't public change the regex
         if (audience != "external-public") {
-            regex = """^https?:\/\/api(\.)?(\{env\}\.)?landonline\.govt\.nz\/v\d+\/[a-zA-Z]+(-[a-zA-Z]+)*$""".toRegex()
+            regex = """^https?:\/\/api(\.)?(\{env\}\.)?landonline\.govt\.nz\/v\d+\/[a-z]+(-[a-z]+)*s$""".toRegex()
         }
         val description = "url doesn't pass regex $regex"
         var filteredByUrl = api.servers.orEmpty().filter {
