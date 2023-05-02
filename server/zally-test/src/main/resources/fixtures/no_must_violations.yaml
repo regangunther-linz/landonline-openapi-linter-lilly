@@ -49,8 +49,8 @@ x-gateway-upstream-targets:
   dev: http://httpbin.org/
   preprod: http://httpbin.org/
 servers:
-  - url: "https://api.landonline.govt.nz/v12/myresource"
-  - url: "https://api{env}.landonline.govt.nz/v12/myresource"
+  - url: "https://api.landonline.govt.nz/v12/myresources"
+  - url: "https://api{env}.landonline.govt.nz/v12/myresources"
     variables:
       env:
         enum:
