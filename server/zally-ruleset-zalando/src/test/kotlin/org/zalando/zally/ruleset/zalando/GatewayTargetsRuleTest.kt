@@ -18,7 +18,7 @@ class GatewayTargetsRuleTest {
             x-gateway-upstream-targets:
               prod: http://httpbin.org/
               dev: http://httpbin.org/
-              preprod: http://httpbin.org/
+              env: http://httpbin.org/
         """.trimIndent()
         val context = DefaultContextFactory().getOpenApiContext(content)
         val violation = rule.validateExtension(context)

@@ -47,7 +47,7 @@ security:
 x-gateway-upstream-targets:
   prod: http://httpbin.org/
   dev: http://httpbin.org/
-  preprod: http://httpbin.org/
+  env: http://httpbin.org/
 servers:
   - url: "https://api.landonline.govt.nz/v12/myresources"
   - url: "https://api{env}.landonline.govt.nz/v12/myresources"
