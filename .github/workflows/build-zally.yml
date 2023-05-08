@@ -2,7 +2,7 @@ name: Zally Pull Request Builds
 
 on:
   push:
-    branches: [ main ]
+    branches: [ feature/ENABLE-3598 ]
   pull_request:
     branches: [ main ]
 
@@ -49,10 +49,11 @@ jobs:
         with:
           java-version: '11'
           distribution: 'adopt'
-      - uses: actions/setup-go@v2
+      - uses: actions/setup-go@v4
         with:
           go-version: '1.16'
       - run: go version
+      - run: go mod tidy
       - name: Run Zally server
         run: |
           cd server/
@@ -68,6 +69,14 @@ jobs:
           ./test.sh integration
           go build
           cd ../..
+      - uses: goreleaser/goreleaser-action@v4
+        if: success()
+        with:
+            distribution: goreleaser
+            version: latest
+            args: release --clean
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: codecov/codecov-action@v1
         with:
           files: ./cli/zally/coverage.txt
