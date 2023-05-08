@@ -27,6 +27,7 @@ class CommonFieldTypesRuleTest {
     @Test
     fun `checkField should allow valid values of common field types`() {
         assertThat(rule.checkField("id", createSchema(STRING_TYPE, null))).isNull()
+        assertThat(rule.checkField("id", createSchema(INTEGER_TYPE, null))).isNull()
         assertThat(rule.checkField("id", createSchema(STRING_TYPE, UUID_FORMAT))).isNull()
         assertThat(rule.checkField("created", createSchema(STRING_TYPE, DATE_TIME_FORMAT))).isNull()
         assertThat(rule.checkField("modified", createSchema(STRING_TYPE, DATE_TIME_FORMAT))).isNull()
@@ -35,7 +36,7 @@ class CommonFieldTypesRuleTest {
 
     @Test
     fun `checkField should return violation description for invalid type`() {
-        assertThat(rule.checkField("id", createSchema(INTEGER_TYPE, null))).isNotNull()
+        assertThat(rule.checkField("created", createSchema(INTEGER_TYPE, null))).isNotNull()
     }
 
     @Test
@@ -57,7 +58,7 @@ class CommonFieldTypesRuleTest {
 
     @Test
     fun `checkField should return a violation description if field type has invalid format`() {
-        assertThat(rule.checkField("id", createSchema(INTEGER_TYPE, null))).isNotNull()
+        assertThat(rule.checkField("created", createSchema(STRING_TYPE, null))).isNotNull()
     }
 
     @Test
@@ -118,8 +119,8 @@ class CommonFieldTypesRuleTest {
               schemas:
                 Pet:
                   properties:
-                    id:
-                      type: integer
+                    created:
+                      type: string
             """.trimIndent()
         )
 
@@ -127,8 +128,8 @@ class CommonFieldTypesRuleTest {
 
         assertThat(violations).isNotEmpty
         assertThat(violations).hasSize(1)
-        assertThat(violations[0].description).containsPattern(".*expected type 'string'.*")
-        assertThat(violations[0].pointer.toString()).isEqualTo("/components/schemas/Pet/properties/id")
+        assertThat(violations[0].description).containsPattern(".*expected format 'date-time'.*")
+        assertThat(violations[0].pointer.toString()).isEqualTo("/components/schemas/Pet/properties/created")
     }
 
     @Test
@@ -170,8 +171,8 @@ class CommonFieldTypesRuleTest {
                         application/json:
                           schema:
                             properties:
-                              id:
-                                type: integer
+                              created:
+                                type: string
             """.trimIndent()
         )
 
@@ -179,8 +180,8 @@ class CommonFieldTypesRuleTest {
 
         assertThat(violations).isNotEmpty
         assertThat(violations).hasSize(1)
-        assertThat(violations[0].description).containsPattern(".*expected type 'string'.*")
-        assertThat(violations[0].pointer.toString()).isEqualTo("/paths/~1pets/get/responses/200/content/application~1json/schema/properties/id")
+        assertThat(violations[0].description).containsPattern(".*expected format 'date-time'.*")
+        assertThat(violations[0].pointer.toString()).isEqualTo("/paths/~1pets/get/responses/200/content/application~1json/schema/properties/created")
     }
 
     @Test
@@ -223,13 +224,12 @@ class CommonFieldTypesRuleTest {
                         application/json:
                           schema:
                             properties:
-                              id:
+                              created:
                                 "${'$'}ref": "#/components/schemas/CustomId"
             components:
               schemas:
                 CustomId:
-                  type: integer
-                  format: int64
+                  type: string
             """.trimIndent()
         )
 
@@ -238,8 +238,8 @@ class CommonFieldTypesRuleTest {
         print(violations)
         assertThat(violations).isNotEmpty
         assertThat(violations).hasSize(1)
-        assertThat(violations[0].description).containsPattern(".*expected type 'string'.*")
-        assertThat(violations[0].pointer.toString()).isEqualTo("/paths/~1pets/get/responses/200/content/application~1json/schema/properties/id")
+        assertThat(violations[0].description).containsPattern(".*expected format 'date-time'.*")
+        assertThat(violations[0].pointer.toString()).isEqualTo("/paths/~1pets/get/responses/200/content/application~1json/schema/properties/created")
     }
 
     @Test
@@ -262,9 +262,8 @@ class CommonFieldTypesRuleTest {
                 CustomId:
                   type: object
                   properties:
-                    id: 
-                      type: integer
-                      format: int64
+                    created: 
+                      type: string
             """.trimIndent()
         )
 
@@ -272,7 +271,7 @@ class CommonFieldTypesRuleTest {
 
         assertThat(violations).isNotEmpty
         assertThat(violations).hasSize(1)
-        assertThat(violations[0].description).containsPattern(".*expected type 'string'.*")
-        assertThat(violations[0].pointer.toString()).isEqualTo("/components/schemas/CustomId/properties/id")
+        assertThat(violations[0].description).containsPattern(".*expected format 'date-time'.*")
+        assertThat(violations[0].pointer.toString()).isEqualTo("/components/schemas/CustomId/properties/created")
     }
 }
