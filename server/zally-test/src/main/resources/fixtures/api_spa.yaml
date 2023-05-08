@@ -33,7 +33,7 @@ parameters:
     type: string
 x-gateway-upstream-targets:
   prod: "http://httpbin.org/"
-  preprod: "http://httpbin.org/"
+  env: "http://httpbin.org/"
   dev: "http://httpbin.org/"
 servers:
   - url: https://api.landonline.govt.nz/my-proxy-generation-test-api
