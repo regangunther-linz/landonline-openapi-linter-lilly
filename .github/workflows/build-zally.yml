@@ -62,6 +62,14 @@ jobs:
         with:
           go-version: '1.16'
       - run: go version
+      - uses: goreleaser/goreleaser-action@v4
+        if: success() && startsWith(github.ref, 'refs/tags/')
+        with:
+          distribution: goreleaser
+          version: latest
+          args: release --clean
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Run Zally server
         run: |
           cd server/
@@ -77,14 +85,6 @@ jobs:
           ./test.sh integration
           go build
           cd ../..
-      - uses: goreleaser/goreleaser-action@v4
-        if: success() && startsWith(github.ref, 'refs/tags/')
-        with:
-            distribution: goreleaser
-            version: latest
-            args: release --clean
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: codecov/codecov-action@v1
         with:
           files: ./cli/zally/coverage.txt
