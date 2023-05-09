@@ -68,6 +68,7 @@ jobs:
           distribution: goreleaser
           version: latest
           args: release --clean
+          workdir: ./cli/zally
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Run Zally server
