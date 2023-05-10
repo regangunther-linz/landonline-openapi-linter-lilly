@@ -1,0 +1,60 @@
+name: Zally CLI artifact build and release
+
+on:
+  push:
+    branches: [ main ]
+    tags:
+      - '*'
+    paths:
+      - 'cli/**'
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  build-cli:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - run: git fetch --force --tags
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+      - uses: actions/setup-go@v4
+        with:
+          go-version: '1.16'
+      - run: go version
+      - uses: goreleaser/goreleaser-action@v4
+        if: success() && startsWith(github.ref, 'refs/tags/')
+        with:
+          distribution: goreleaser
+          version: latest
+          args: release --clean
+          workdir: ./cli/zally
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run Zally server
+        run: |
+          cd server/
+          chmod +x gradlew
+          ./gradlew --console=plain bootRun > /dev/null &
+          echo $! > /tmp/zally_server.pid
+          cd ..
+          while ! echo "GET / HTTP/1.0\n" | nc localhost 8000; do sleep 1; done
+      - name: Build & Run CLI tests
+        run: |
+          cd cli/zally
+          ./test.sh
+          ./test.sh integration
+          go build
+          cd ../..
+      - uses: codecov/codecov-action@v1
+        with:
+          files: ./cli/zally/coverage.txt

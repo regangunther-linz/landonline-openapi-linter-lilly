@@ -40,37 +40,6 @@ jobs:
           rm -f ~/.gradle/caches/modules-2/modules-2.lock
           rm -f ~/.gradle/caches/modules-2/gc.properties
 
-  build-cli:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK
-        uses: actions/setup-java@v2
-        with:
-          java-version: '11'
-          distribution: 'adopt'
-      - uses: actions/setup-go@v2
-        with:
-          go-version: '1.16'
-      - run: go version
-      - name: Run Zally server
-        run: |
-          cd server/
-          chmod +x gradlew
-          ./gradlew --console=plain bootRun > /dev/null &
-          echo $! > /tmp/zally_server.pid
-          cd ..
-          while ! echo "GET / HTTP/1.0\n" | nc localhost 8000; do sleep 1; done
-      - name: Build & Run CLI tests
-        run: |
-          cd cli/zally
-          ./test.sh
-          ./test.sh integration
-          go build
-          cd ../..
-      - uses: codecov/codecov-action@v1
-        with:
-          files: ./cli/zally/coverage.txt
 
   test-web-ui:
     runs-on: ubuntu-latest
