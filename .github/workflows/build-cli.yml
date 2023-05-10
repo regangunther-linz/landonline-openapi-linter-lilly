@@ -1,4 +1,4 @@
-ame: Zally CLI artifact build and release
+name: Zally CLI artifact build and release
 
 on:
   push:
